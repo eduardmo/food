@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "594234263753",
+    "firebase_url": "https://capefood-65eba.firebaseio.com",
+    "project_id": "capefood-65eba",
+    "storage_bucket": "capefood-65eba.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:594234263753:android:8e4334e656a52183a72518",
+        "android_client_info": {
+          "package_name": "com.cape.food"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "594234263753-5ac62ehk3vvlk9srk8pujqs0o7kbojlu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cape.food",
+            "certificate_hash": "6cd8fb44206593bd5b74c5b15780960154c0696e"
+          }
+        },
+        {
+          "client_id": "594234263753-l0g3l93hvv6ert9rh8eboie6gscmk16i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkI6lJWB4gyL3ZViMTuumQ4dD79ugOL0k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "594234263753-l0g3l93hvv6ert9rh8eboie6gscmk16i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
