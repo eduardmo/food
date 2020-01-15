@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:food/actions/auth_action.dart';
 import 'package:food/models/auth_state.dart';
 import 'package:food/models/user.dart';
@@ -29,7 +28,7 @@ AuthState userLoginSuccessReducer(AuthState auth, UserLoginSuccess action) {
        loginFail: false,
        logout: false,
        logoutRequest: false,
-       currentUser: action.user
+       currentUser: action.user,
     );
 }
 
@@ -47,4 +46,5 @@ AuthState userLoginFailureReducer(AuthState auth, UserLoginFailure action) {
 AuthState userLogoutReducer(AuthState auth, UserLogout action) {
  return new AuthState();
 }
+
 

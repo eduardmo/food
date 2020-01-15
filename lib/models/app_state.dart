@@ -8,7 +8,6 @@ class AppState {
 
   AppState({
     AuthState auth,
-
   }) : auth = auth ?? new AuthState();
 
 
@@ -17,7 +16,8 @@ class AppState {
   );
 
   static AppState rehydrationJSON(dynamic json) => new AppState(
-        auth: json['auth'] == null ? null : new AuthState.fromJson(json['auth']));
+        auth: json['auth'] == null ? null : new AuthState.fromJson(json['auth'] ),
+        );
 
   Map<String, dynamic> toJson() => {
       'auth': auth.toJson(),
@@ -28,6 +28,7 @@ class AppState {
   }) {
     return new AppState(
       auth: auth ?? this.auth,
+
     );
   }
 

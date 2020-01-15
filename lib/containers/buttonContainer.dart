@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_flipperkit/flutter_flipperkit.dart';
+import 'package:flutter_flipperkit/plugins/redux/flipper_reduxinspector_plugin.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:food/actions/auth_action.dart';
 import 'package:food/containers/googleButton.dart';
 import 'package:food/models/app_state.dart';
 import 'package:redux/redux.dart';
-import '../actions/auth_action.dart' as actions;
 
 class GoogleAuthButtonContainer extends StatelessWidget {
   GoogleAuthButtonContainer({Key key}) : super(key: key);
@@ -40,14 +41,9 @@ class _ViewModel {
   	// with the appropriate qualities:
   	//
     return new _ViewModel(
-        buttonText:
-        store.state.auth.currentUser != null ? 'Log Out' : 'Log in with Google',
+        buttonText: 'Log in with Google',
         onPressedCallback: () {
-          if (store.state.auth.currentUser != null) {
-             store.dispatch(createLogOutMiddleware);
-          } else {
-            store.dispatch(createLogInMiddleware);
-          }
+        store.dispatch(createLogInMiddleware);    
         });
   }
 }
