@@ -8,9 +8,6 @@ import 'package:redux_persist/redux_persist.dart';
 import 'package:redux_persist_flutter/redux_persist_flutter.dart';
 import 'package:flipperkit_redux_middleware/flipperkit_redux_middleware.dart';
 
-import 'menuMiddleware.dart';
-import 'menuMiddleware.dart';
-
 final persistor = Persistor<AppState>(
   storage: FlutterStorage(),
   serializer: JsonSerializer<AppState>(AppState.rehydrationJSON)

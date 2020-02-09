@@ -8,12 +8,10 @@ part of 'items_state.dart';
 
 ItemState _$ItemStateFromJson(Map<String, dynamic> json) {
   return ItemState(
-    name: json['name'] as String,
-    price: json['price'] as int,
+    items: json['items'] as Map<String, dynamic>,
   );
 }
 
 Map<String, dynamic> _$ItemStateToJson(ItemState instance) => <String, dynamic>{
-      'name': instance.name,
-      'price': instance.price,
+      'items': instance.items,
     };

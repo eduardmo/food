@@ -12,7 +12,7 @@ class MainScreen extends StatelessWidget {
 
  @override
   Widget build(BuildContext context) {
-  	// Connect to the store:
+  	// Connect tolist(0) the store:
     return StoreConnector<AppState, _ViewModel>(
  
       converter: _ViewModel.fromStore,
@@ -28,7 +28,7 @@ class MainScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  "What would you like to eat?",
+                  "What would you like tolist(0) eat?",
                   style: TextStyle(fontSize: 18),
                 ),
               ),
@@ -97,253 +97,6 @@ class MainScreen extends StatelessWidget {
             ),
           ),
           Popular(),
-          SizedBox(
-            height: 5,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              "Best food",
-              style: TextStyle(fontSize: 22, color: grey),
-            ),
-          ),
-
-//          Best Food
-
-          Padding(padding: EdgeInsets.all(2),
-          child: Stack(
-            children: <Widget>[
-              Card(
-                child: Container(
-                  height: 275,
-                  child: Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        // child: Image.asset("images/food.jpg"),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: Container(
-                                height: 40,
-                                child: Column(
-                                  children: <Widget>[
-                                    Text("Some Food"),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 8.0),
-                                      child: Row(
-                                        children: <Widget>[
-                                          SizedBox(
-                                            width: 3,
-                                          ),
-                                         
-                                          SizedBox(
-                                            width: 3,
-                                          ),
-                                          Text(
-                                            "(298)",
-                                            style: TextStyle(color: grey, fontSize: 12),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-
-                                  ],
-                                )),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: Text("\$34.99", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
-                          ),
-                        ],
-                      ),
-
-                    ],
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(200.0),
-                child: SmallButton(Icons.add),
-              )
-            ],
-          ),),
-
-          Padding(padding: EdgeInsets.all(2),
-            child: Stack(
-              children: <Widget>[
-                Card(
-                  child: Container(
-                    height: 275,
-                    child: Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          // child: Image.asset("images/food.jpg"),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: Container(
-                                  height: 40,
-                                  child: Column(
-                                    children: <Widget>[
-                                      Text("Some Food"),
-                                      Padding(
-                                        padding: const EdgeInsets.only(left: 8.0),
-                                        child: Row(
-                                          children: <Widget>[
-                                            SizedBox(
-                                              width: 3,
-                                            ),
-                                            Icon(
-                                              Icons.star,
-                                              color: red,
-                                              size: 14,
-                                            ),
-                                            Icon(
-                                              Icons.star,
-                                              color: red,
-                                              size: 14,
-                                            ),
-                                            Icon(
-                                              Icons.star,
-                                              color: red,
-                                              size: 14,
-                                            ),
-                                            Icon(
-                                              Icons.star,
-                                              color: red,
-                                              size: 14,
-                                            ),
-                                            Icon(
-                                              Icons.star,
-                                              color: grey,
-                                              size: 14,
-                                            ),
-                                            SizedBox(
-                                              width: 3,
-                                            ),
-                                            Text(
-                                              "(298)",
-                                              style: TextStyle(color: grey, fontSize: 12),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-
-                                    ],
-                                  )),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: Text("\$34.99", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
-                            ),
-                          ],
-                        ),
-
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SmallButton(Icons.favorite),
-                )
-              ],
-            ),),
-
-          Padding(padding: EdgeInsets.all(2),
-            child: Stack(
-              children: <Widget>[
-                Card(
-                  child: Container(
-                    height: 275,
-                    child: Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          // child: Image.asset("images/food.jpg"),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: Container(
-                                  height: 40,
-                                  child: Column(
-                                    children: <Widget>[
-                                      Text("Some Food"),
-                                      Padding(
-                                        padding: const EdgeInsets.only(left: 8.0),
-                                        child: Row(
-                                          children: <Widget>[
-                                            SizedBox(
-                                              width: 3,
-                                            ),
-                                            Icon(
-                                              Icons.star,
-                                              color: red,
-                                              size: 14,
-                                            ),
-                                            Icon(
-                                              Icons.star,
-                                              color: red,
-                                              size: 14,
-                                            ),
-                                            Icon(
-                                              Icons.star,
-                                              color: red,
-                                              size: 14,
-                                            ),
-                                            Icon(
-                                              Icons.star,
-                                              color: red,
-                                              size: 14,
-                                            ),
-                                            Icon(
-                                              Icons.star,
-                                              color: grey,
-                                              size: 14,
-                                            ),
-                                            SizedBox(
-                                              width: 3,
-                                            ),
-                                            Text(
-                                              "(298)",
-                                              style: TextStyle(color: grey, fontSize: 12),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-
-                                    ],
-                                  )),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: Text("\$34.99", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
-                            ),
-                          ],
-                        ),
-
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SmallButton(Icons.favorite),
-                )
-              ],
-            ),),
-
 
 
 //          End here
@@ -400,28 +153,24 @@ class MainScreen extends StatelessWidget {
 }
 
 class _ViewModel {
-  final String buttonText;
-  final Function onPressedCallback;
+  final Map<String, dynamic> items;
+  
+  _ViewModel({this.items});
 
-  _ViewModel({this.onPressedCallback, this.buttonText});
+  void initializeBestFood() {
+
+  }
 
   static _ViewModel fromStore(Store<AppState> store) {
   	// This is a bit of a more complex _viewModel
   	// constructor. As the state updates, it will
   	// recreate this _viewModel, and then pass
-  	// buttonText and the callback down to the button
+  	// buttonText and the callback down tolist(0) the button
   	// with the appropriate qualities:
   	//
-    return new _ViewModel(
-        buttonText:
-        store.state.auth.currentUser != null ? 'Log Out' : 'Log in with Google',
-        onPressedCallback: () {
-          if (store.state.auth.currentUser != null) {
-             store.dispatch(createLogOutMiddleware);
-          } else {
-            store.dispatch(createLogInMiddleware);
-          }
-        });
+    return new _ViewModel( 
+        items: store.state.menu.item.items,
+    );
   }
 }
 

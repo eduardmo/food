@@ -16,7 +16,16 @@ Map<String, dynamic> toJson() => _$MenuStateToJson(this);
 
 factory MenuState.fromJson(Map<String, dynamic> json) => _$MenuStateFromJson(json);
 
-
+MenuState copyWith({
+  final ItemState item,
+  final String menuName
+  }) {
+    return new MenuState(
+      menuName: menuName ?? this.menuName,
+      item: item ?? this.item
+    );
+  }
+  
  @override
   String toString() {
     return "{MenuName: $menuName, items: $item}";

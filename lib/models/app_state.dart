@@ -23,7 +23,7 @@ class AppState {
     if(json == null) return null;
     return AppState(
           auth: json['auth'] == null ? null : new AuthState.fromJson(json['auth'] ),
-          menu: json['menu'] == null ? null : new MenuState.fromJson(json['auth'])   
+          menu: json['menu'] == null ? null : new MenuState.fromJson(json['menu'])   
     );
   }
 

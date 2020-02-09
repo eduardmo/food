@@ -6,7 +6,6 @@ import 'package:food/models/app_state.dart';
 import 'package:redux/redux.dart';
 
 import '../actions/menu_actions.dart';
-import '../middleware/menuMiddleware.dart';
 
 class GoogleAuthButtonContainer extends StatelessWidget {
   GoogleAuthButtonContainer({Key key}) : super(key: key);
@@ -45,7 +44,7 @@ class _ViewModel {
         buttonText: 'Log in with Google',
         onPressedCallback: () {
         store.dispatch(createLogInMiddleware);
-        store.dispatch(exampleEpic);    
+        store.dispatch(retrieveItem);    
         });
   }
 }

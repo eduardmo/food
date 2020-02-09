@@ -6,12 +6,10 @@ part 'items_state.g.dart';
 @JsonSerializable(explicitToJson: true)
 @immutable
 class ItemState{
-final String name;
-final int price;
+final Map<String, dynamic> items;
 
 ItemState(
-  {this.name, 
-this.price});
+  {this.items});
 
 Map<String, dynamic> toJson() => _$ItemStateToJson(this);
 
@@ -20,9 +18,7 @@ factory ItemState.fromJson(Map<String, dynamic> json) => _$ItemStateFromJson(jso
 
  @override
   String toString() {
-     return '''AppState{
-      ItemName: $name,
-      price: $price,
-    }''';
+     return '$items'
+    ;
   }
 }

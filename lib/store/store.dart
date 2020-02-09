@@ -4,7 +4,6 @@ import 'package:food/reducer/app_reducer.dart';
 import 'package:redux/redux.dart';
 
 Store<AppState> createStore(initialState) { 
-     print(initialState);
         Store<AppState> store = new Store (
             appReducer,
             initialState:  initialState == null ?  AppState() : initialState,
