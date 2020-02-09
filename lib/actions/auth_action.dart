@@ -7,7 +7,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:redux_thunk/redux_thunk.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
 class UserLoginRequest {}
 
 class UserLoginSuccess {
@@ -52,7 +51,7 @@ class UserLogoutFailure {
 
 ThunkAction<AppState> createLogOutMiddleware = (Store<AppState> store) async {
     final GoogleSignIn _googleSignIn = GoogleSignIn();
-    final FirebaseAuth _auth = FirebaseAuth.instance;
+    final FirebaseAuth _auth = FirebaseAuth.instance; 
 
       try {
         await _googleSignIn.signOut();
@@ -68,7 +67,7 @@ ThunkAction<AppState> createLogOutMiddleware = (Store<AppState> store) async {
 };
 
 ThunkAction<AppState> createLogInMiddleware = (Store<AppState> store) async {
- await store.dispatch(UserLoginRequest());
+//  await store.dispatch(UserLoginRequest());
     FirebaseUser userFirebase;
     final FirebaseAuth _auth = FirebaseAuth.instance;
     final GoogleSignIn _googleSignIn = new GoogleSignIn();
