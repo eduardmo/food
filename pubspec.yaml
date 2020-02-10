@@ -42,6 +42,7 @@ dependencies:
   flutter_flipperkit: ^0.0.21
   flipperkit_redux_middleware: 
     path: ./flipperkit_redux_middleware
+  page_transition: '^1.0.9'
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

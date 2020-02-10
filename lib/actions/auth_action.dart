@@ -87,7 +87,7 @@ ThunkAction<AppState> createLogInMiddleware = (Store<AppState> store) async {
           'name': userFirebase.displayName
         });
         store.dispatch(new UserLoginSuccess(User(userFirebase.displayName, userFirebase.email, userFirebase.uid)));
-        await store.dispatch(NavigateToAction.replace('/main'));
+        await store.dispatch(NavigateToAction.replace('/dashboard'));
 
       } catch (error) {
         store.dispatch(new UserLoginFailure(error));
