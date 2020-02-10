@@ -1,8 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:food/actions/auth_action.dart';
 import 'package:food/actions/menu_actions.dart';
 import 'package:food/containers/buttons.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:redux/redux.dart';
 import '../models/app_state.dart';
 import '../styles/colors.dart';
@@ -18,13 +20,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+RefreshController _refreshController = RefreshController(initialRefresh: false);
+
   @override
   Widget build(BuildContext context) {
     return new StoreConnector<AppState, _ViewModel>(
       converter: _ViewModel.fromStore,
       builder: (BuildContext context, _ViewModel vm) {
         return Scaffold(
-            body: Center(
+          body: Center(
                 child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -67,7 +71,8 @@ class _HomePageState extends State<HomePage> {
                 )
               ],
             )),
-            backgroundColor: bgColor,
+          backgroundColor: bgColor,
+           
           );
             }
           );
@@ -76,10 +81,9 @@ class _HomePageState extends State<HomePage> {
       }
       
     class _ViewModel {
-  final String buttonText;
   final Function onPressedCallback;
 
-  _ViewModel({this.onPressedCallback, this.buttonText});
+  _ViewModel({this.onPressedCallback});
 
   static _ViewModel fromStore(Store<AppState> store) {
   	// This is a bit of a more complex _viewModel
@@ -89,7 +93,7 @@ class _HomePageState extends State<HomePage> {
   	// with the appropriate qualities:
   	//
     return new _ViewModel(
-        buttonText: 'Log in with Google',
+
         onPressedCallback: () {
         store.dispatch(createLogInMiddleware);
         store.dispatch(retrieveItem);    

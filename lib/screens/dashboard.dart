@@ -1,31 +1,42 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:food/actions/auth_action.dart';
+import 'package:food/actions/menu_actions.dart';
 import 'package:food/containers/fryo_icons.dart';
+import 'package:food/models/app_state.dart';
 import 'package:food/styles/colors.dart';
 import 'package:food/styles/styles.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:redux/redux.dart';
 
 class Dashboard extends StatefulWidget {
   final String pageTitle;
 
   Dashboard({Key key, this.pageTitle}) : super(key: key);
-
   @override
   _DashboardState createState() => _DashboardState();
 }
 
 class _DashboardState extends State<Dashboard> {
   int _selectedIndex = 0;
+ RefreshController _refreshController = RefreshController(initialRefresh: false);
 
   @override
   Widget build(BuildContext context) {
-    final _tabs = [
-      storeTab(context),
+     return new StoreConnector<AppState, _ViewModel>(
+       converter: _ViewModel.fromStore,
+      builder: (BuildContext context, _ViewModel vm) {
+   
+        final _tabs = [
+      storeTab(context, vm),
       Text('Tab2'),
       Text('Tab3'),
       Text('Tab4'),
       Text('Tab5'),
     ];
-
     return Scaffold(
+        
         backgroundColor: bgColor,
         appBar: AppBar(
           centerTitle: true,
@@ -53,7 +64,40 @@ class _DashboardState extends State<Dashboard> {
             )
           ],
         ),
-        body: _tabs[_selectedIndex],
+        body: SmartRefresher(
+        enablePullDown: true,
+        enablePullUp: false,
+        header: WaterDropHeader(),
+        footer: CustomFooter(
+          builder: (BuildContext context,LoadStatus mode){
+            Widget body ;
+            if(mode==LoadStatus.idle){
+              body =  Text("pull up load");
+            }
+            else if(mode==LoadStatus.loading){
+              body =  CupertinoActivityIndicator();
+            }
+            else if(mode == LoadStatus.failed){
+              body = Text("Load Failed!Click retry!");
+            }
+            else if(mode == LoadStatus.canLoading){
+                body = Text("release to load more");
+            }
+            else{
+              body = Text("No more Data");
+            }
+            return Container(
+              height: 55.0,
+              child: Center(child:body),
+            );
+          },
+        ),
+           controller: this._refreshController,
+        onRefresh: () => vm.onRefreshCallback(this._refreshController),
+        onLoading: () => vm.onLoadingCallback(this._refreshController),
+        child: _tabs[_selectedIndex],
+        ),
+        
         bottomNavigationBar: BottomNavigationBar(
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
@@ -91,7 +135,10 @@ class _DashboardState extends State<Dashboard> {
           type: BottomNavigationBarType.fixed,
           fixedColor: Colors.green[600],
           onTap: _onItemTapped,
-        ));
+        )
+        );
+      }
+     );
   }
 
   void _onItemTapped(int index) {
@@ -101,65 +148,10 @@ class _DashboardState extends State<Dashboard> {
   }
 }
 
-Widget storeTab(BuildContext context) {
-
-  // will pick it up from here
-  // am to start another template
-  // List<Product> foods = [
-  //   Product(
-  //       name: "Hamburger",
-  //       image: "images/3.png",
-  //       price: "\$25.00",
-  //       userLiked: true,
-  //       discount: 10),
-  //   Product(
-  //       name: "Pasta",
-  //       image: "images/5.png",
-  //       price: "\$150.00",
-  //       userLiked: false,
-  //       discount: 7.8),
-  //   Product(
-  //     name: "Akara",
-  //     image: 'images/2.png',
-  //     price: '\$10.99',
-  //     userLiked: false,
-  //   ),
-  //   Product(
-  //       name: "Strawberry",
-  //       image: "images/1.png",
-  //       price: '\$50.00',
-  //       userLiked: true,
-  //       discount: 14)
-  // ];
-
-  // List<Product> drinks = [
-  //   Product(
-  //       name: "Coca-Cola",
-  //       image: "images/6.png",
-  //       price: "\$45.12",
-  //       userLiked: true,
-  //       discount: 2),
-  //   Product(
-  //       name: "Lemonade",
-  //       image: "images/7.png",
-  //       price: "\$28.00",
-  //       userLiked: false,
-  //       discount: 5.2),
-  //   Product(
-  //       name: "Vodka",
-  //       image: "images/8.png",
-  //       price: "\$78.99",
-  //       userLiked: false),
-  //   Product(
-  //       name: "Tequila",
-  //       image: "images/9.png",
-  //       price: "\$168.99",
-  //       userLiked: true,
-  //       discount: 3.4)
-  // ];
+Widget storeTab(BuildContext context, _ViewModel vm) {
 
   return ListView(children: <Widget>[
-    headerTopCategories(),
+    headerTopCategories(vm),
     deals('Hot Deals', onViewMore: () {}, items: <Widget>[
       // foodItem(foods[0], onTapped: () {
       //   Navigator.push(
@@ -290,7 +282,7 @@ Widget sectionHeader(String headerTitle, {onViewMore}) {
 }
 
 // wrap the horizontal listview inside a sizedBox..
-Widget headerTopCategories() {
+Widget headerTopCategories(_ViewModel vm) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.center,
     crossAxisAlignment: CrossAxisAlignment.center,
@@ -298,23 +290,24 @@ Widget headerTopCategories() {
       sectionHeader('All Categories', onViewMore: () {}),
       SizedBox(
         height: 130,
-        child: ListView(
+        child: ListView.builder(
+          itemCount: vm.items.length,
           scrollDirection: Axis.horizontal,
           shrinkWrap: true,
-          children: <Widget>[
-            headerCategoryItem('Frieds', Fryo.dinner, onPressed: () {}),
-            headerCategoryItem('Fast Food', Fryo.food, onPressed: () {}),
-            headerCategoryItem('Creamery', Fryo.poop, onPressed: () {}),
-            headerCategoryItem('Hot Drinks', Fryo.coffee_cup, onPressed: () {}),
-            headerCategoryItem('Vegetables', Fryo.leaf, onPressed: () {}),
-          ],
+          itemBuilder: (_, int i) {
+            String key = vm.items.keys.elementAt(i);
+            Map<dynamic, dynamic> value = vm.items.values.elementAt(i);
+            return headerCategoryItem(key,value['url'] , onPressed: () => {vm.onPressLogOut()}); 
+          
+          },
+          
         ),
       )
     ],
   );
 }
 
-Widget headerCategoryItem(String name, IconData icon, {onPressed}) {
+Widget headerCategoryItem( String name, String url, {onPressed}) {
   return Container(
     margin: EdgeInsets.only(left: 15),
     child: Column(
@@ -330,7 +323,7 @@ Widget headerCategoryItem(String name, IconData icon, {onPressed}) {
               heroTag: name,
               onPressed: onPressed,
               backgroundColor: white,
-              child: Icon(icon, size: 35, color: Colors.black87),
+              child: Image.network(url),
             )),
         Text(name + ' ›', style: categoryText)
       ],
@@ -338,7 +331,7 @@ Widget headerCategoryItem(String name, IconData icon, {onPressed}) {
   );
 }
 
-Widget deals(String dealTitle, {onViewMore, List<Widget> items}) {
+Widget deals(String dealTitle, _ViewModel vm ,{onViewMore, List<Widget> items}) {
   return Container(
     margin: EdgeInsets.only(top: 5),
     child: Column(
@@ -348,20 +341,53 @@ Widget deals(String dealTitle, {onViewMore, List<Widget> items}) {
         sectionHeader(dealTitle, onViewMore: onViewMore),
         SizedBox(
           height: 250,
-          child: ListView(
+          child: ListView.builder(
+            itemCount: vm.items.length,
             scrollDirection: Axis.horizontal,
-            children: (items != null)
-                ? items
-                : <Widget>[
+            itemBuilder: (BuildContext ctx, int index) {
+              String key = vm.items.keys.elementAt(index);
+            Map<dynamic, dynamic> value = vm.items.values.elementAt(index);
+              (items != null) ? items : <Widget>[
                     Container(
                       margin: EdgeInsets.only(left: 15),
                       child: Text('No items available at this moment.',
                           style: taglineText),
                     )
-                  ],
+                  ];
+            },
           ),
         )
       ],
     ),
   );
+}
+
+  class _ViewModel {
+
+  final Function onPressLogOut;
+  final Function(RefreshController _refreshController) onRefreshCallback;
+  final Function(RefreshController _refreshController) onLoadingCallback;
+  final Map<String, dynamic> items;
+  _ViewModel({this.onPressLogOut,this.onRefreshCallback(RefreshController _refreshController), this.onLoadingCallback(RefreshController _refreshController), this.items});
+  
+
+  static _ViewModel fromStore(Store<AppState> store) {
+    return new _ViewModel(
+      items: store.state.menu.item.items,
+
+      onRefreshCallback: (_refreshController) async{
+        await Future.delayed(Duration(milliseconds: 1000));
+        await store.dispatch(retrieveItem);
+        _refreshController.refreshCompleted();
+    },
+
+      onLoadingCallback: (_refreshController) async {
+        await Future.delayed(Duration(milliseconds: 1000));
+        _refreshController.loadComplete();
+    },
+
+      onPressLogOut: () {
+      store.dispatch(createLogOutMiddleware);    
+    });
+  }
 }
