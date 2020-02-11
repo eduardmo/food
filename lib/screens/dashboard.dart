@@ -152,112 +152,17 @@ Widget storeTab(BuildContext context, _ViewModel vm) {
 
   return ListView(children: <Widget>[
     headerTopCategories(vm),
-    deals('Hot Deals', onViewMore: () {}, items: <Widget>[
-      // foodItem(foods[0], onTapped: () {
-      //   Navigator.push(
-      //     context,
-      //     MaterialPageRoute(
-      //       builder: (context) {
-      //         return new ProductPage(
-      //           productData: foods[0],
-      //         );
-      //       },
-      //     ),
-      //   );
-      // }, onLike: () {}),
-      // foodItem(foods[1], onTapped: () {
-      //   Navigator.push(
-      //     context,
-      //     MaterialPageRoute(
-      //       builder: (context) {
-      //         return new ProductPage(
-      //           productData: foods[1],
-      //         );
-      //       },
-      //     ),
-      //   );
-      // }, imgWidth: 250, onLike: () {
-        
-      // }),
-      // foodItem(foods[2], onTapped: () {
-      //    Navigator.push(
-      //     context,
-      //     MaterialPageRoute(
-      //       builder: (context) {
-      //         return new ProductPage(
-      //           productData: foods[2],
-      //         );
-      //       },
-      //     ),
-      //   );
-      // }, imgWidth: 200, onLike: () {
-       
-      // }),
-      // foodItem(foods[3], onTapped: () {
-      //   Navigator.push(
-      //     context,
-      //     MaterialPageRoute(
-      //       builder: (context) {
-      //         return new ProductPage(
-      //           productData: foods[3],
-      //         );
-      //       },
-      //     ),
-      //   );
-      // }, onLike: () {
-        
-      // }),
-    ]),
-    deals('Drinks Parol', onViewMore: () {}, items: <Widget>[
-      // foodItem(drinks[0], onTapped: () {
-      //   Navigator.push(
-      //     context,
-      //     MaterialPageRoute(
-      //       builder: (context) {
-      //         return new ProductPage(
-      //           productData: drinks[0],
-      //         );
-      //       },
-      //     ),
-      //   );
-      // }, onLike: () {}, imgWidth: 60),
-      // foodItem(drinks[1], onTapped: () {
-      //   Navigator.push(
-      //     context,
-      //     MaterialPageRoute(
-      //       builder: (context) {
-      //         return new ProductPage(
-      //           productData: drinks[1],
-      //         );
-      //       },
-      //     ),
-      //   );
-      // }, onLike: () {}, imgWidth: 75),
-      // foodItem(drinks[2], onTapped: () {
-      //   Navigator.push(
-      //     context,
-      //     MaterialPageRoute(
-      //       builder: (context) {
-      //         return new ProductPage(
-      //           productData: drinks[2],
-      //         );
-      //       },
-      //     ),
-      //   );
-      // }, imgWidth: 110, onLike: () {}),
-      // foodItem(drinks[3], onTapped: () {
-      //   Navigator.push(
-      //     context,
-      //     MaterialPageRoute(
-      //       builder: (context) {
-      //         return new ProductPage(
-      //           productData: drinks[3],
-      //         );
-      //       },
-      //     ),
-      //   );
-      // }, onLike: () {}),
-    ])
+    ListView.builder(
+      shrinkWrap: true,
+      itemCount: vm.items.length,
+      itemBuilder: (BuildContext ctx, int i) {
+        String key = vm.items.keys.elementAt(i);
+            Map<dynamic, dynamic> value = vm.items.values.elementAt(i);
+        print(vm.items.length);
+        return deals(key, vm, onViewMore: () {}, items: <Widget>[]);
+      }),
+  
+    
   ]);
 }
 
@@ -341,20 +246,15 @@ Widget deals(String dealTitle, _ViewModel vm ,{onViewMore, List<Widget> items}) 
         sectionHeader(dealTitle, onViewMore: onViewMore),
         SizedBox(
           height: 250,
-          child: ListView.builder(
-            itemCount: vm.items.length,
+          child: ListView(
             scrollDirection: Axis.horizontal,
-            itemBuilder: (BuildContext ctx, int index) {
-              String key = vm.items.keys.elementAt(index);
-            Map<dynamic, dynamic> value = vm.items.values.elementAt(index);
-              (items != null) ? items : <Widget>[
+             children:  (items != null) ? items : <Widget>[
                     Container(
                       margin: EdgeInsets.only(left: 15),
                       child: Text('No items available at this moment.',
                           style: taglineText),
                     )
-                  ];
-            },
+                  ],
           ),
         )
       ],
