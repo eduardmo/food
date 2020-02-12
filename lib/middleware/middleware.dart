@@ -1,7 +1,6 @@
 import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
 import 'package:food/models/app_state.dart';
 import 'package:redux/redux.dart';
-import 'package:redux_epics/redux_epics.dart';
 import 'package:redux_thunk/redux_thunk.dart';
 import 'package:redux_logging/redux_logging.dart';
 import 'package:redux_persist/redux_persist.dart';

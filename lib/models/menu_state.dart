@@ -9,8 +9,9 @@ part 'menu_state.g.dart';
 class MenuState {
 final ItemState item;
 final String menuName;
+final Map<dynamic, dynamic> requestedList;
 
-MenuState({this.item, this.menuName});
+MenuState({this.item, this.menuName, this.requestedList});
 
 Map<String, dynamic> toJson() => _$MenuStateToJson(this);
 
@@ -18,16 +19,18 @@ factory MenuState.fromJson(Map<String, dynamic> json) => _$MenuStateFromJson(jso
 
 MenuState copyWith({
   final ItemState item,
-  final String menuName
+  final String menuName,
+  final Map<dynamic, dynamic> requestedList
   }) {
     return new MenuState(
       menuName: menuName ?? this.menuName,
-      item: item ?? this.item
+      item: item ?? this.item,
+      requestedList: requestedList ?? this.requestedList
     );
   }
   
  @override
   String toString() {
-    return "{MenuName: $menuName, items: $item}";
+    return "{MenuName: $menuName, items: $item, requestedList: $requestedList}";
   }
 }

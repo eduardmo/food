@@ -1,14 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
 import 'package:food/actions/auth_action.dart';
 import 'package:food/actions/menu_actions.dart';
 import 'package:food/containers/fryo_icons.dart';
 import 'package:food/models/app_state.dart';
+import 'package:food/screens/category_list.dart';
 import 'package:food/styles/colors.dart';
 import 'package:food/styles/styles.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:redux/redux.dart';
+
+import '../actions/menu_actions.dart';
 
 class Dashboard extends StatefulWidget {
   final String pageTitle;
@@ -92,7 +96,7 @@ class _DashboardState extends State<Dashboard> {
             );
           },
         ),
-           controller: this._refreshController,
+        controller: this._refreshController,
         onRefresh: () => vm.onRefreshCallback(this._refreshController),
         onLoading: () => vm.onLoadingCallback(this._refreshController),
         child: _tabs[_selectedIndex],
@@ -149,18 +153,11 @@ class _DashboardState extends State<Dashboard> {
 }
 
 Widget storeTab(BuildContext context, _ViewModel vm) {
-
   return ListView(children: <Widget>[
     headerTopCategories(vm),
-    ListView.builder(
-      shrinkWrap: true,
-      itemCount: vm.items.length,
-      itemBuilder: (BuildContext ctx, int i) {
-        String key = vm.items.keys.elementAt(i);
-            Map<dynamic, dynamic> value = vm.items.values.elementAt(i);
-        print(vm.items.length);
-        return deals(key, vm, onViewMore: () {}, items: <Widget>[]);
-      }),
+    deals('Last order', vm, onViewMore: () {}, items: <Widget>[]),
+    deals('Last order', vm, onViewMore: () {}, items: <Widget>[]),
+
   
     
   ]);
@@ -202,7 +199,8 @@ Widget headerTopCategories(_ViewModel vm) {
           itemBuilder: (_, int i) {
             String key = vm.items.keys.elementAt(i);
             Map<dynamic, dynamic> value = vm.items.values.elementAt(i);
-            return headerCategoryItem(key,value['url'] , onPressed: () => {vm.onPressLogOut()}); 
+            return headerCategoryItem(key,value['url'] , onPressed: () => {vm.onListCategoryItems(value)});
+
           
           },
           
@@ -268,12 +266,22 @@ Widget deals(String dealTitle, _ViewModel vm ,{onViewMore, List<Widget> items}) 
   final Function(RefreshController _refreshController) onRefreshCallback;
   final Function(RefreshController _refreshController) onLoadingCallback;
   final Map<String, dynamic> items;
-  _ViewModel({this.onPressLogOut,this.onRefreshCallback(RefreshController _refreshController), this.onLoadingCallback(RefreshController _refreshController), this.items});
+  final Function(Map<dynamic, dynamic> itemValues) onListCategoryItems;
+  _ViewModel({this.onPressLogOut,
+    this.onRefreshCallback(RefreshController _refreshController),
+   this.onLoadingCallback(RefreshController _refreshController), 
+   this.items,
+   this.onListCategoryItems});
   
 
   static _ViewModel fromStore(Store<AppState> store) {
     return new _ViewModel(
       items: store.state.menu.item.items,
+
+      onListCategoryItems: (itemValues) async {
+        await store.dispatch(RequestCategoryList(itemValues));
+        await store.dispatch(NavigateToAction.replace('/categoryList'));
+      },
 
       onRefreshCallback: (_refreshController) async{
         await Future.delayed(Duration(milliseconds: 1000));
