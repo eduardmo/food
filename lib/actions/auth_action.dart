@@ -17,7 +17,7 @@ class UserLoginSuccess {
   String toString() {
     return 'LogIn{user: $user}';
   }
-}
+} 
 
 class UserLoginFailure {
   final dynamic error;
