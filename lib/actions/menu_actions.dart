@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
 import 'package:food/models/app_state.dart';
 import 'package:food/models/items_state.dart';
 import 'package:food/models/menu_state.dart';
@@ -40,7 +39,7 @@ ThunkAction<AppState> retrieveItem = (Store<AppState> store) async {
        .catchError((error) => {
          print(error)
        });
-       DocumentReference itemReference = menuData['Items'].toList().first as DocumentReference;
+       DocumentReference itemReference = menuData['Items'] as DocumentReference;
       
         var itemdata = itemReference.get().then((DocumentSnapshot snap) {
            return snap.data;

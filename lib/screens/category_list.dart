@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
 import 'package:food/screens/food_card.dart';
 import 'package:redux/redux.dart';
 
-import '../main.dart';
 import '../models/app_state.dart';
 
 class CategoryList extends StatefulWidget {
@@ -22,7 +22,8 @@ Widget build(BuildContext context) {
     converter: _ViewModel.fromStore,
         builder: (BuildContext context, _ViewModel vm) {
        return Scaffold(
-      body: Container(
+
+         body: Container(
         margin: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
         child: Column(
           children: <Widget>[
@@ -46,7 +47,9 @@ Widget build(BuildContext context) {
     return SafeArea(
       child: Row(
         children: <Widget>[
-          Text('MENU'),
+          IconButton(icon: Icon(Icons.arrow_back), onPressed: () {
+            vm.goToHomePage();
+          }),
           Spacer(),
           IconButton(icon: Icon(Icons.search), onPressed: () { print(vm.requestedItems);}),
           Stack(
@@ -84,7 +87,8 @@ Widget build(BuildContext context) {
              newMap.addEntries(vm.requestedItems.entries);
          });
         newMap.remove('url');
-
+         print('lalalalal');
+         print(newMap);
       return new GridTile(
         child:FoodCard(newMap.keys.elementAt(index), newMap.values.elementAt(index))//just for testing, will fill with image later
       );
@@ -97,12 +101,18 @@ Widget build(BuildContext context) {
   class _ViewModel {
     final Map<String, dynamic> items;
     final Map<dynamic, dynamic> requestedItems;
-    _ViewModel({this.items, this.requestedItems});
+    final Function() goToHomePage;
+
+    _ViewModel({this.items, this.requestedItems, this.goToHomePage});
 
     static _ViewModel fromStore(Store<AppState> store) {
     return new _ViewModel(
             items: store.state.menu.item.items,
-            requestedItems: store.state.menu.requestedList
+      requestedItems: store.state.menu.requestedList,
+
+      goToHomePage: () async {
+        store.dispatch(NavigateToAction.pop());
+      },
       );
   }
 }

@@ -44,20 +44,23 @@ class _DashboardState extends State<Dashboard> {
                 vm.onUserProfileClicked,
                 vm.onPressLogOut),
           ];
-
           return Scaffold(
+
               backgroundColor: bgColor,
               appBar: AppBar(
                 centerTitle: true,
                 elevation: 0,
                 leading: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    vm.onPressLogOut();
+                  },
                   iconSize: 21,
                   icon: Icon(Fryo.funnel),
                 ),
                 backgroundColor: primaryColor,
-                title: Text('Fryo',
-                    style: logoWhiteStyle, textAlign: TextAlign.center),
+                title:
+                Text(
+                    'Fryo', style: logoWhiteStyle, textAlign: TextAlign.center),
                 actions: <Widget>[
                   IconButton(
                     padding: EdgeInsets.all(0),
@@ -82,13 +85,17 @@ class _DashboardState extends State<Dashboard> {
                     Widget body;
                     if (mode == LoadStatus.idle) {
                       body = Text("pull up load");
-                    } else if (mode == LoadStatus.loading) {
+                    }
+                    else if (mode == LoadStatus.loading) {
                       body = CupertinoActivityIndicator();
-                    } else if (mode == LoadStatus.failed) {
+                    }
+                    else if (mode == LoadStatus.failed) {
                       body = Text("Load Failed!Click retry!");
-                    } else if (mode == LoadStatus.canLoading) {
+                    }
+                    else if (mode == LoadStatus.canLoading) {
                       body = Text("release to load more");
-                    } else {
+                    }
+                    else {
                       body = Text("No more Data");
                     }
                     return Container(
@@ -102,6 +109,7 @@ class _DashboardState extends State<Dashboard> {
                 onLoading: () => vm.onLoadingCallback(this._refreshController),
                 child: _tabs[_selectedIndex],
               ),
+
               bottomNavigationBar: BottomNavigationBar(
                 items: <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
@@ -139,8 +147,10 @@ class _DashboardState extends State<Dashboard> {
                 type: BottomNavigationBarType.fixed,
                 fixedColor: Colors.green[600],
                 onTap: _onItemTapped,
-              ));
-        });
+              )
+          );
+        }
+    );
   }
 
   void _onItemTapped(int index) {
@@ -260,21 +270,24 @@ class _ViewModel {
   final Function onPressLogOut;
   final Function(RefreshController _refreshController) onRefreshCallback;
   final Function(RefreshController _refreshController) onLoadingCallback;
-  final Function(Map<dynamic, dynamic> itemValues) onListCategoryItems;
   final Function onAdminButtonClicked;
   final Function onUserProfileClicked;
 
   final Map<String, dynamic> items;
   final AuthState auth;
 
-  _ViewModel({this.onRefreshCallback(RefreshController _refreshController),
+  final Function(Map<dynamic, dynamic> itemValues) onListCategoryItems;
+
+  _ViewModel({
+    this.onPressLogOut,
+    this.onRefreshCallback(RefreshController _refreshController),
     this.onLoadingCallback(RefreshController _refreshController),
     this.onAdminButtonClicked,
     this.onUserProfileClicked,
-    this.onPressLogOut,
     this.items,
     this.auth,
-    this.onListCategoryItems});
+    this.onListCategoryItems
+  });
 
   static _ViewModel fromStore(Store<AppState> store) {
     return new _ViewModel(
