@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "594234263753-s8dllatt3m22d8gcfl2a0ccch1pfvcv4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cape.food",
+            "certificate_hash": "2dfbf983ca9931bccc524246069109fd17463a1c"
+          }
+        },
+        {
+          "client_id": "594234263753-e5t8k9644r4oedd4401fet6geua2a6ra.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cape.food",
+            "certificate_hash": "80d68ad743dda593a9a8930ce7ae036cff21363d"
+          }
+        },
+        {
           "client_id": "594234263753-5ac62ehk3vvlk9srk8pujqs0o7kbojlu.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

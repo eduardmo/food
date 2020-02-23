@@ -7,12 +7,13 @@ class User {
   final String name;
   final String email;
   final String uid;
+  final bool isAdmin;
 
-  User(this.name, this.email, this.uid);
+  User(this.name, this.email, this.uid, this.isAdmin);
 
   @override
   String toString() {
-    return "{name: $name, email: $email, uid: $uid}";
+    return "{name: $name, email: $email, uid: $uid,isAdmin:$isAdmin}";
   }
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
