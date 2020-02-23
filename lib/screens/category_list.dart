@@ -84,13 +84,12 @@ Widget build(BuildContext context) {
        itemBuilder: (BuildContext context, int index) {
          Map<dynamic, dynamic> newMap = new Map<dynamic, dynamic>();
          vm.requestedItems.keys.forEach((key) {
-             newMap.addEntries(vm.requestedItems.entries);
+              newMap.addEntries(vm.requestedItems.entries);
          });
         newMap.remove('url');
          print('lalalalal');
-         print(newMap);
-      return new GridTile(
-        child:FoodCard(newMap.keys.elementAt(index), newMap.values.elementAt(index))//just for testing, will fill with image later
+     return new GridTile(
+        child:FoodCard(newMap.keys.elementAt(index), newMap.values.toList().elementAt(index))//just for testing, will fill with image later
       );
   },);
       } )

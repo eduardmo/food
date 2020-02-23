@@ -18,7 +18,7 @@ class FoodCard extends StatefulWidget {
 
 class _FoodCardState extends State<FoodCard> with SingleTickerProviderStateMixin {
   String get name => widget.name;
-  Map<String, dynamic> get price => widget.price;
+  Map<dynamic, dynamic> get price => widget.price;
 
   @override
   void initState() {
