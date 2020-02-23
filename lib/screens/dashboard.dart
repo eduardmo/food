@@ -46,7 +46,7 @@ class _DashboardState extends State<Dashboard> {
           centerTitle: true,
           elevation: 0,
           leading: IconButton(
-            onPressed: () {},
+            onPressed: () {vm.onPressLogOut();},
             iconSize: 21,
             icon: Icon(Fryo.funnel),
           ),
@@ -280,7 +280,7 @@ Widget deals(String dealTitle, _ViewModel vm ,{onViewMore, List<Widget> items}) 
 
       onListCategoryItems: (itemValues) async {
         await store.dispatch(RequestCategoryList(itemValues));
-        await store.dispatch(NavigateToAction.replace('/categoryList'));
+        await store.dispatch(NavigateToAction.push('/categoryList'));
       },
 
       onRefreshCallback: (_refreshController) async{

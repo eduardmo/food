@@ -40,7 +40,7 @@ ThunkAction<AppState> retrieveItem = (Store<AppState> store) async {
        .catchError((error) => {
          print(error)
        });
-       DocumentReference itemReference = menuData['Items'].toList().first as DocumentReference;
+       DocumentReference itemReference = menuData['Items'] as DocumentReference;
       
         var itemdata = itemReference.get().then((DocumentSnapshot snap) {
            return snap.data;

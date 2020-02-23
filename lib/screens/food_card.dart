@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
 import 'package:redux/redux.dart';
 
 import '../models/app_state.dart';
@@ -9,7 +10,7 @@ import '../styles/styles.dart';
 class FoodCard extends StatefulWidget {
   // FoodCard(this.food);
    String name;
-   Map<String, dynamic> price;
+   Map<dynamic, dynamic> price;
 
    FoodCard(this.name, this.price);
   _FoodCardState createState() => _FoodCardState();
@@ -40,7 +41,7 @@ class _FoodCardState extends State<FoodCard> with SingleTickerProviderStateMixin
             buildImage(),
             buildTitle(),
             buildRating(),
-            buildPriceInfo(),
+            buildPriceInfo(vm),
           ],
         ),
       ),
@@ -49,22 +50,17 @@ class _FoodCardState extends State<FoodCard> with SingleTickerProviderStateMixin
   }
 
   Widget buildImage() {
-    return ClipRRect(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-      child: Image.network(
-        'https://img.icons8.com/color/48/000000/thanksgiving.png',
-        fit: BoxFit.fill,
-        height: MediaQuery.of(context).size.height / 6,
-        loadingBuilder: (context, Widget child, ImageChunkEvent progress) {
-          if (progress == null) return child;
-          return Center(
-            child: Padding(
-              padding: EdgeInsets.all(32),
-              child: CircularProgressIndicator(value: progress.expectedTotalBytes != null ? progress.cumulativeBytesLoaded / progress.expectedTotalBytes : null),
-            ),
-          );
-        },
-      ),
+    return Flexible(
+      child: Container(
+       decoration: BoxDecoration(
+         image: DecorationImage(image: new NetworkImage(
+           'https://img.icons8.com/metro/50/000000/food.png',
+         ),
+        )     
+       ),
+  
+      )
+   
     );
   }
 
@@ -104,7 +100,7 @@ class _FoodCardState extends State<FoodCard> with SingleTickerProviderStateMixin
     );
   }
 
-  Widget buildPriceInfo() {
+  Widget buildPriceInfo(_ViewModel vm) {
     return Padding(
       padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
       child: Row(
@@ -120,7 +116,7 @@ class _FoodCardState extends State<FoodCard> with SingleTickerProviderStateMixin
             shape: roundedRectangle4,
             color: mainColor,
             child: InkWell(
-              onTap: addItemToCard,
+              onTap: vm.goToAddItem,
               splashColor: Colors.white70,
               customBorder: roundedRectangle4,
               child: Icon(Icons.add),
@@ -133,7 +129,7 @@ class _FoodCardState extends State<FoodCard> with SingleTickerProviderStateMixin
 
   addItemToCard() {
     final snackBar = SnackBar(
-      // content: Text('${food.name} added to cart'),
+      content: Text('added to cart'),
       duration: Duration(milliseconds: 500),
     );
     Scaffold.of(context).showSnackBar(snackBar);
@@ -145,12 +141,16 @@ class _FoodCardState extends State<FoodCard> with SingleTickerProviderStateMixin
   class _ViewModel {
     final Map<String, dynamic> items;
     final Map<dynamic, dynamic> requestedItems;
-    _ViewModel({this.items, this.requestedItems});
+    final Function() goToAddItem;
+    _ViewModel({this.items, this.requestedItems, this.goToAddItem});
 
     static _ViewModel fromStore(Store<AppState> store) {
     return new _ViewModel(
             items: store.state.menu.item.items,
-            requestedItems: store.state.menu.requestedList
+            requestedItems: store.state.menu.requestedList,
+            goToAddItem: () async {
+              store.dispatch(NavigateToAction.push('/addItem'));
+            }
       );
   }
 }

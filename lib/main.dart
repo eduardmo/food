@@ -3,6 +3,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:food/models/app_state.dart';
 import 'package:food/screens/category_list.dart';
 import 'package:food/screens/dashboard.dart';
+import 'package:food/screens/product_page.dart';
 import 'package:food/store/store.dart';
 import 'package:food/middleware/middleware.dart';
 import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
@@ -54,6 +55,8 @@ Route _getRoute(RouteSettings settings) {
         return _buildRoute(settings, Dashboard());
       case '/categoryList':
         return _buildRoute(settings, CategoryList());
+      case '/addItem':
+        return _buildRoute(settings, ProductPage("hallo"));
       default: 
        return  this.store.state.auth.loginSuccess ? _buildRoute(settings, Dashboard()) : _buildRoute(settings, HomePage());
     }
