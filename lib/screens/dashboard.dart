@@ -38,7 +38,11 @@ class _DashboardState extends State<Dashboard> {
             Text('Tab2'),
             Text('Tab3'),
             Text('Tab4'),
-            DashboardSettings(vm.auth.currentUser.isAdmin),
+            DashboardSettings(
+                vm.auth.currentUser.isAdmin,
+                vm.onAdminButtonClicked,
+                vm.onUserProfileClicked,
+                vm.onPressLogOut),
           ];
 
           return Scaffold(
@@ -256,19 +260,21 @@ class _ViewModel {
   final Function onPressLogOut;
   final Function(RefreshController _refreshController) onRefreshCallback;
   final Function(RefreshController _refreshController) onLoadingCallback;
+  final Function(Map<dynamic, dynamic> itemValues) onListCategoryItems;
+  final Function onAdminButtonClicked;
+  final Function onUserProfileClicked;
+
   final Map<String, dynamic> items;
   final AuthState auth;
 
-  final Function(Map<dynamic, dynamic> itemValues) onListCategoryItems;
-
-  _ViewModel({
-    this.onPressLogOut,
-    this.onRefreshCallback(RefreshController _refreshController),
+  _ViewModel({this.onRefreshCallback(RefreshController _refreshController),
     this.onLoadingCallback(RefreshController _refreshController),
+    this.onAdminButtonClicked,
+    this.onUserProfileClicked,
+    this.onPressLogOut,
     this.items,
     this.auth,
-    this.onListCategoryItems
-  });
+    this.onListCategoryItems});
 
   static _ViewModel fromStore(Store<AppState> store) {
     return new _ViewModel(
@@ -276,7 +282,7 @@ class _ViewModel {
         auth: store.state.auth,
         onListCategoryItems: (itemValues) async {
           await store.dispatch(RequestCategoryList(itemValues));
-          await store.dispatch(NavigateToAction.replace('/categoryList'));
+          await store.dispatch(NavigateToAction.push('/categoryList'));
         },
         onRefreshCallback: (_refreshController) async {
           await Future.delayed(Duration(milliseconds: 1000));
@@ -289,6 +295,12 @@ class _ViewModel {
         },
         onPressLogOut: () {
           store.dispatch(createLogOutMiddleware);
+        },
+        onAdminButtonClicked: () {
+          store.dispatch(NavigateToAction.push('/admin'));
+        },
+        onUserProfileClicked: () {
+          print("onUserProfile Clicked");
         });
   }
 }

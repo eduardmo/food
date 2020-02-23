@@ -2,10 +2,16 @@ import 'package:flutter/material.dart';
 
 class DashboardSettings extends StatelessWidget {
   bool isAdmin = false;
+  Function onAdminButtonClicked;
+  Function onUserProfileClicked;
+  Function onLogoutClicked;
 
-  DashboardSettings(bool isAdmin) {
+  DashboardSettings(bool isAdmin, Function onAdminButtonClicked,
+      Function onUserProfileClicked, Function onLogoutClicked) {
     this.isAdmin = isAdmin;
-    print(isAdmin);
+    this.onAdminButtonClicked = onAdminButtonClicked;
+    this.onUserProfileClicked = onUserProfileClicked;
+    this.onLogoutClicked = onLogoutClicked;
   }
 
   @override
@@ -18,12 +24,15 @@ class DashboardSettings extends StatelessWidget {
               visible: isAdmin,
               child: RaisedButton(
                 child: Text("Admin"),
-                onPressed: () => {print("Pressed Admin!")},
+                onPressed: onAdminButtonClicked,
               ),
             ),
             RaisedButton(
-                child: Text("User Profile"),
-                onPressed: () => {print(isAdmin), print("Pressed Not Admin!")})
+                child: Text("User Profile"), onPressed: onUserProfileClicked),
+            RaisedButton(
+              child: Text("Logout"),
+              onPressed: onLogoutClicked,
+            )
           ],
         ));
   }
