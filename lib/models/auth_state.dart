@@ -1,7 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:food/models/user.dart';
-import 'package:meta/meta.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:meta/meta.dart';
 
 part 'auth_state.g.dart';
 
@@ -12,14 +10,12 @@ class AuthState {
   final bool loginSuccess;
   final bool loginFail;
   final bool logout;
-  final User currentUser;
 
   AuthState(
       {this.loginRequest = false,
       this.loginSuccess = false,
       this.loginFail = false,
       this.logout = false,
-      this.currentUser,
      });
 
   Map<String, dynamic> toJson() => _$AuthStateToJson(this);
@@ -27,7 +23,6 @@ class AuthState {
   factory AuthState.fromJson(Map<String, dynamic> json) => _$AuthStateFromJson(json);
 
   AuthState copyWith({
-    final User currentUser,
     final bool loginRequest,
     final bool loginSuccess,
     final bool loginFail,
@@ -39,7 +34,6 @@ class AuthState {
       loginSuccess: loginSuccess ?? this.loginSuccess,
       loginFail: loginFail ?? this.loginFail,
       logout: logout ?? this.logout,
-      currentUser: currentUser ?? this.currentUser,
     );
   }
 
@@ -50,7 +44,6 @@ class AuthState {
                 loginSuccess: $loginSuccess,
                 loginFail: $loginFail,
                 logout: $logout,
-                currentuser: $currentUser,
             }''';
   }
 }

@@ -8,7 +8,7 @@ import 'package:redux_thunk/redux_thunk.dart';
 import '../models/app_state.dart';
 import '../models/items_state.dart';
 
-class RequestMenu{
+class RequestMenu {
   MenuState menu;
 
   RequestMenu(this.menu);
@@ -19,38 +19,50 @@ class RequestMenu{
   }
 }
 
-class RequestCategoryList{
-Map<dynamic, dynamic> requestedList;
+class RequestCategoryList {
+  Map<dynamic, dynamic> requestedList;
 
-RequestCategoryList(this.requestedList);
+  RequestCategoryList(this.requestedList);
 
-@override
-String toString() {
-  return 'RequestedList: {requestedList: $requestedList}';
+  @override
+  String toString() {
+    return 'RequestedList: {requestedList: $requestedList}';
+  }
 }
+
+class RequestAdminMenus {
+  List<MenuState> menus;
+
+  RequestAdminMenus(this.menus);
+
+  @override
+  String toString() {
+    return 'RequestAdminMenus: {requestedList: $menus}';
+  }
 }
- 
 
 ThunkAction<AppState> retrieveItem = (Store<AppState> store) async {
-      try {
-       var menuData = await Firestore.instance.collection("Menu").where('isActive', isEqualTo: true).getDocuments().then((QuerySnapshot query ) async{
-          return query.documents.toList().first.data;
-       })
-       .catchError((error) => {
-         print(error)
-       });
-       DocumentReference itemReference = menuData['Items'] as DocumentReference;
-      
-        var itemdata = itemReference.get().then((DocumentSnapshot snap) {
-           return snap.data;
-        }) 
-        .catchError((error) => {
-          print(error)
-        });
+  try {
+    var menuData = await Firestore.instance
+        .collection("Menu")
+        .where('isActive', isEqualTo: true)
+        .getDocuments()
+        .then((QuerySnapshot query) async {
+      return query.documents
+          .toList()
+          .first
+          .data;
+    }).catchError((error) => {print(error)});
+    DocumentReference itemReference = menuData['Items'] as DocumentReference;
 
-        store.dispatch( new RequestMenu(new MenuState(menuName: menuData['Name'], item:  new ItemState(items: await itemdata))));
-      } catch (error) {
-        print(error);
-    }
-  
+    var itemdata = itemReference.get().then((DocumentSnapshot snap) {
+      return snap.data;
+    }).catchError((error) => {print(error)});
+
+    store.dispatch(new RequestMenu(new MenuState(
+        Name: menuData['Name'],
+        item: new ItemState(items: await itemdata))));
+  } catch (error) {
+    print(error);
+  }
 };

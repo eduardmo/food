@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
+import 'package:food/actions/user_action.dart';
 import 'package:food/models/app_state.dart';
-import 'package:food/models/user.dart';
+import 'package:food/models/user_state.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_thunk/redux_thunk.dart';
@@ -10,13 +11,11 @@ import 'package:redux_thunk/redux_thunk.dart';
 class UserLoginRequest {}
 
 class UserLoginSuccess {
-  final User user;
-
-  UserLoginSuccess(this.user);
+  UserLoginSuccess();
 
   @override
   String toString() {
-    return 'LogIn{user: $user}';
+    return 'UserLoginSuccess';
   }
 }
 
@@ -47,7 +46,6 @@ class UserLogoutFailure {
   String toString() {
     return 'LogOut{There was an error loggin out: $error}';
   }
-
 }
 
 ThunkAction<AppState> createLogOutMiddleware = (Store<AppState> store) async {
@@ -86,9 +84,13 @@ ThunkAction<AppState> createLogInMiddleware = (Store<AppState> store) async {
     DocumentSnapshot userSnapshot = await ref.document(userFirebase.uid).get();
 
     if (userSnapshot.exists) {
-      store.dispatch(new UserLoginSuccess(User(
-          userFirebase.displayName, userFirebase.email, userFirebase.uid,
-          userSnapshot.data["isAdmin"])));
+      await store.dispatch(new UserLoginSuccess());
+      await store.dispatch(new SetUserState(new UserState(
+          name: userFirebase.displayName,
+          email: userFirebase.email,
+          uid: userFirebase.uid,
+          isAdmin: userSnapshot.data["isAdmin"],
+          adminMenus: null)));
     } else {
       //If not, add to our database
       await ref.document(userFirebase.uid).setData({
@@ -96,11 +98,14 @@ ThunkAction<AppState> createLogInMiddleware = (Store<AppState> store) async {
         'name': userFirebase.displayName,
         'isAdmin': false
       });
-      store.dispatch(new UserLoginSuccess(User(
-          userFirebase.displayName, userFirebase.email, userFirebase.uid,
-          false)));
+      await store.dispatch(new UserLoginSuccess());
+      await store.dispatch(new SetUserState(new UserState(
+          name: userFirebase.displayName,
+          email: userFirebase.email,
+          uid: userFirebase.uid,
+          isAdmin: false,
+          adminMenus: null)));
     }
-
     await store.dispatch(NavigateToAction.replace('/dashboard'));
   } catch (error) {
     store.dispatch(new UserLoginFailure(error));

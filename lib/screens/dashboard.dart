@@ -6,7 +6,7 @@ import 'package:food/actions/auth_action.dart';
 import 'package:food/actions/menu_actions.dart';
 import 'package:food/containers/fryo_icons.dart';
 import 'package:food/models/app_state.dart';
-import 'package:food/models/auth_state.dart';
+import 'package:food/models/user_state.dart';
 import 'package:food/styles/colors.dart';
 import 'package:food/styles/styles.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -39,7 +39,7 @@ class _DashboardState extends State<Dashboard> {
             Text('Tab3'),
             Text('Tab4'),
             DashboardSettings(
-                vm.auth.currentUser.isAdmin,
+                vm.user.isAdmin,
                 vm.onAdminButtonClicked,
                 vm.onUserProfileClicked,
                 vm.onPressLogOut),
@@ -274,7 +274,7 @@ class _ViewModel {
   final Function onUserProfileClicked;
 
   final Map<String, dynamic> items;
-  final AuthState auth;
+  final UserState user;
 
   final Function(Map<dynamic, dynamic> itemValues) onListCategoryItems;
 
@@ -285,14 +285,14 @@ class _ViewModel {
     this.onAdminButtonClicked,
     this.onUserProfileClicked,
     this.items,
-    this.auth,
+    this.user,
     this.onListCategoryItems
   });
 
   static _ViewModel fromStore(Store<AppState> store) {
     return new _ViewModel(
         items: store.state.menu.item.items,
-        auth: store.state.auth,
+        user: store.state.user,
         onListCategoryItems: (itemValues) async {
           await store.dispatch(RequestCategoryList(itemValues));
           await store.dispatch(NavigateToAction.push('/categoryList'));

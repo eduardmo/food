@@ -12,9 +12,6 @@ AuthState _$AuthStateFromJson(Map<String, dynamic> json) {
     loginSuccess: json['loginSuccess'] as bool,
     loginFail: json['loginFail'] as bool,
     logout: json['logout'] as bool,
-    currentUser: json['currentUser'] == null
-        ? null
-        : User.fromJson(json['currentUser'] as Map<String, dynamic>),
   );
 }
 
@@ -23,5 +20,4 @@ Map<String, dynamic> _$AuthStateToJson(AuthState instance) => <String, dynamic>{
       'loginSuccess': instance.loginSuccess,
       'loginFail': instance.loginFail,
       'logout': instance.logout,
-      'currentUser': instance.currentUser,
     };

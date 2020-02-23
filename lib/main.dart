@@ -4,7 +4,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
 import 'package:food/middleware/middleware.dart';
 import 'package:food/models/app_state.dart';
-import 'package:food/screens/admin/managemenu_screen.dart';
+import 'package:food/screens/admin/AdminDashboard_screen.dart';
 import 'package:food/screens/category_list.dart';
 import 'package:food/screens/dashboard.dart';
 import 'package:food/screens/product_page.dart';
@@ -31,7 +31,6 @@ class FoodApp extends StatelessWidget {
     
   FoodApp(initialState) {
     this.store = createStore(initialState);
- 
   }
 
   @override
@@ -58,9 +57,7 @@ Route _getRoute(RouteSettings settings) {
       case '/addItem':
         return _buildRoute(settings, ProductPage("hallo"));
       case '/admin':
-        return _buildRoute(settings, ManageMenu());
-
-
+        return _buildRoute(settings, AdminDashboard());
       default:
        return  this.store.state.auth.loginSuccess ? _buildRoute(settings, Dashboard()) : _buildRoute(settings, HomePage());
     }
