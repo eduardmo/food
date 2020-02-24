@@ -12,8 +12,10 @@ class MenuState {
   final String Address;
   final String Email;
   final String Phone;
-  final String isActive;
+  final bool isActive;
   final ItemState item;
+
+  @JsonKey(nullable: true, includeIfNull: true)
   final Map<dynamic, dynamic> requestedList;
 
   MenuState({this.id,

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:food/screens/admin/MenuManagement_screen.dart';
 import 'package:food/styles/colors.dart';
 
 
@@ -19,7 +20,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
   @override
   Widget build(BuildContext context) {
     final _tabs = [
-      Text("Menu"),
+      MenuManagement(),
       Text("Orders"),
       Text("UserBalance")
     ];

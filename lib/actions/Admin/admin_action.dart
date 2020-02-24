@@ -4,14 +4,15 @@ import 'package:food/models/menu_state.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_thunk/redux_thunk.dart';
 
-class RequestAdminMenus {
+
+class RequestAdminMenu {
   final List<MenuState> menus;
 
-  RequestAdminMenus(this.menus);
+  RequestAdminMenu(this.menus);
 
   @override
   String toString() {
-    return 'Request Admin Menus{Menus: $menus}';
+    return 'RequestAdminMenu';
   }
 }
 
@@ -21,8 +22,10 @@ ThunkAction<AppState> retrieveAdminMenus = (Store<AppState> store) async {
         .collection("Menu")
         .getDocuments()
         .then((QuerySnapshot query) async {
-      return query.documents.toList();
-    }).catchError((error) => {print(error)});
+      return query.documents;
+    }).catchError((error) {
+      print(error);
+    });
 
     Iterator<DocumentSnapshot> menusIterator = menusDocumentSnapshot.iterator;
     List<MenuState> menus = new List();
@@ -37,7 +40,7 @@ ThunkAction<AppState> retrieveAdminMenus = (Store<AppState> store) async {
           item: menusIterator.current['item']));
     }
 
-    store.dispatch(new RequestAdminMenus(menus));
+    store.dispatch(new RequestAdminMenu(menus));
   } catch (error) {
     print(error);
   }

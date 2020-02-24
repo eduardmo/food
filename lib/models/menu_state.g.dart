@@ -13,7 +13,7 @@ MenuState _$MenuStateFromJson(Map<String, dynamic> json) {
     Address: json['Address'] as String,
     Email: json['Email'] as String,
     Phone: json['Phone'] as String,
-    isActive: json['isActive'] as String,
+    isActive: json['isActive'] as bool,
     item: json['item'] == null
         ? null
         : ItemState.fromJson(json['item'] as Map<String, dynamic>),

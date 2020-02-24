@@ -1,3 +1,4 @@
+import 'package:food/actions/Admin/admin_action.dart';
 import 'package:food/actions/auth_action.dart';
 import 'package:food/actions/menu_actions.dart';
 import 'package:food/actions/user_action.dart';
@@ -8,7 +9,6 @@ import 'auth_reducer.dart';
 import 'menu_reducer.dart';
 
 AppState appReducer(AppState state, action) {
-  print(action.runtimeType);
   switch (action.runtimeType) {
   //Login, logout, login failure only need the auth state to be changed
     case UserLoginRequest:
@@ -18,7 +18,6 @@ AppState appReducer(AppState state, action) {
 
   //When login success, we also need to populate the menu state
     case UserLoginSuccess:
-      print("masuk sini");
       return state.copyWith(
           auth: authReducer(state.auth, action),
           menu: menuReducer(state.menu, action));
@@ -30,7 +29,7 @@ AppState appReducer(AppState state, action) {
 
   //When we change User, everything must go here
     case SetUserState:
-      print("Masuk sini 2");
+    case RequestAdminMenu:
       return state.copyWith(user: userReducer(state.user, action));
   }
 

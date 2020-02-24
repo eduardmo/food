@@ -9,6 +9,7 @@ class UserState {
   final String email;
   final String uid;
   final bool isAdmin;
+  @JsonKey(nullable: true)
   final List<MenuState> adminMenus;
 
   UserState({this.name, this.email, this.uid, this.isAdmin, this.adminMenus});

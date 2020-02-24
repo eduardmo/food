@@ -30,17 +30,6 @@ class RequestCategoryList {
   }
 }
 
-class RequestAdminMenus {
-  List<MenuState> menus;
-
-  RequestAdminMenus(this.menus);
-
-  @override
-  String toString() {
-    return 'RequestAdminMenus: {requestedList: $menus}';
-  }
-}
-
 ThunkAction<AppState> retrieveItem = (Store<AppState> store) async {
   try {
     var menuData = await Firestore.instance
