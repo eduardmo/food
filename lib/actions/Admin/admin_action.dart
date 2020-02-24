@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
 import 'package:food/models/app_state.dart';
 import 'package:food/models/menu_state.dart';
 import 'package:redux/redux.dart';
@@ -17,6 +18,7 @@ class RequestAdminMenu {
 }
 
 ThunkAction<AppState> retrieveAdminMenus = (Store<AppState> store) async {
+  print("Masuk sini 2");
   try {
     List<DocumentSnapshot> menusDocumentSnapshot = await Firestore.instance
         .collection("Menu")
@@ -45,3 +47,25 @@ ThunkAction<AppState> retrieveAdminMenus = (Store<AppState> store) async {
     print(error);
   }
 };
+
+ThunkAction<AppState> SaveNewMenu(MenuState menuState) {
+  return (Store<AppState> store) async {
+    try {
+      CollectionReference ref = Firestore.instance.collection('Menu');
+      ref.add({
+        'Address': menuState.Address,
+        'Email': menuState.Email,
+        'Items': null,
+        'Name': menuState.Name,
+        'Phone': menuState.Phone,
+        'isActive': menuState.isActive
+      });
+
+      await store.dispatch(retrieveAdminMenus);
+      store.dispatch(NavigateToAction.pop());
+    } catch (error) {
+      print("Masuk sini 3");
+      print(error);
+    }
+  };
+}

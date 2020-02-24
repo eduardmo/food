@@ -5,6 +5,7 @@ import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
 import 'package:food/middleware/middleware.dart';
 import 'package:food/models/app_state.dart';
 import 'package:food/screens/admin/AdminDashboard_screen.dart';
+import 'package:food/screens/admin/createmenu_screen.dart';
 import 'package:food/screens/category_list.dart';
 import 'package:food/screens/dashboard.dart';
 import 'package:food/screens/product_page.dart';
@@ -58,6 +59,9 @@ Route _getRoute(RouteSettings settings) {
         return _buildRoute(settings, ProductPage("hallo"));
       case '/admin':
         return _buildRoute(settings, AdminDashboard());
+      case '/admin/AddMenu':
+        return _buildRoute(settings, CreateMenu());
+
       default:
        return  this.store.state.auth.loginSuccess ? _buildRoute(settings, Dashboard()) : _buildRoute(settings, HomePage());
     }
