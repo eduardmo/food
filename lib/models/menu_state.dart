@@ -8,23 +8,21 @@ part 'menu_state.g.dart';
 @immutable
 class MenuState {
   final String id;
-  final String Name;
-  final String Address;
-  final String Email;
-  final String Phone;
+  final String name;
+  final String address;
+  final String email;
+  final String phone;
   final bool isActive;
-  final ItemState item;
 
   @JsonKey(nullable: true, includeIfNull: true)
   final Map<dynamic, dynamic> requestedList;
 
   MenuState({this.id,
-    this.Name,
-    this.Address,
-    this.Email,
-    this.Phone,
+    this.name,
+    this.address,
+    this.email,
+    this.phone,
     this.isActive,
-    this.item,
     this.requestedList});
 
   Map<String, dynamic> toJson() => _$MenuStateToJson(this);
@@ -37,17 +35,16 @@ class MenuState {
     final Map<dynamic, dynamic> requestedList}) {
     return new MenuState(
         id: id ?? this.id,
-        Name: Name ?? this.Name,
-        Address: Address ?? this.Address,
-        Email: Email ?? this.Email,
-        Phone: Phone ?? this.Phone,
+        name: name ?? this.name,
+        address: address ?? this.address,
+        email: email ?? this.email,
+        phone: phone ?? this.phone,
         isActive: isActive ?? this.isActive,
-        item: item ?? this.item,
         requestedList: requestedList ?? this.requestedList);
   }
 
   @override
   String toString() {
-    return "{Name: $Name,Address:$Address,Email:$Email,Phone:$Phone,isActive:$isActive,item: $item, requestedList: $requestedList}";
+    return "{name: $name,address:$address,email:$email,phone:$phone,isActive:$isActive, requestedList: $requestedList}";
   }
 }

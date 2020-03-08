@@ -5,20 +5,30 @@ part 'items_state.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 @immutable
-class ItemState{
-final Map<String, dynamic> items;
+class ItemState {
+  final String id;
+  final String categoryId;
+  final String image;
+  final String menuId;
+  final String name;
+  final double price;
 
-ItemState(
-  {this.items});
+  ItemState(
+      {this.id,
+      this.categoryId,
+      this.image,
+      this.menuId,
+      this.name,
+      this.price
+      });
 
-Map<String, dynamic> toJson() => _$ItemStateToJson(this);
+  Map<String, dynamic> toJson() => _$ItemStateToJson(this);
 
-factory ItemState.fromJson(Map<String, dynamic> json) => _$ItemStateFromJson(json);
+  factory ItemState.fromJson(Map<String, dynamic> json) =>
+      _$ItemStateFromJson(json);
 
-
- @override
+  @override
   String toString() {
-     return '$items'
-    ;
+    return 'id: $id, Name: $name';
   }
 }

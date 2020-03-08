@@ -177,8 +177,6 @@ class _ViewModel {
 
   static _ViewModel fromStore(Store<AppState> store) {
     return new _ViewModel(
-        items: store.state.menu.item.items,
-        requestedItems: store.state.menu.requestedList,
         popPage: () async {
           store.dispatch(NavigateToAction.pop());
         });

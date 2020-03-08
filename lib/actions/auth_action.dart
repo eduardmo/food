@@ -7,6 +7,9 @@ import 'package:food/models/user_state.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_thunk/redux_thunk.dart';
+import 'package:food/actions/item_action.dart';
+import 'package:food/actions/menu_action.dart';
+import 'package:food/actions/category_action.dart';
 
 class UserLoginRequest {}
 
@@ -106,7 +109,15 @@ ThunkAction<AppState> createLogInMiddleware = (Store<AppState> store) async {
           isAdmin: false,
           adminMenus: null)));
     }
+    
+    //Retrieve data for all items
+    await store.dispatch(retrieveMenu); 
+    await store.dispatch(retrieveCategories);
+    await store.dispatch(retrieveItems);
+
+    //Open Dashboard
     await store.dispatch(NavigateToAction.replace('/dashboard'));
+
   } catch (error) {
     store.dispatch(new UserLoginFailure(error));
   }

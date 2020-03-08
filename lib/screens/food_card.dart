@@ -9,8 +9,8 @@ import '../styles/styles.dart';
 
 class FoodCard extends StatefulWidget {
   // FoodCard(this.food);
-   String name;
-   Map<dynamic, dynamic> price;
+   final String name;
+   final double price;
 
    FoodCard(this.name, this.price);
   _FoodCardState createState() => _FoodCardState();
@@ -18,12 +18,12 @@ class FoodCard extends StatefulWidget {
 
 class _FoodCardState extends State<FoodCard> with SingleTickerProviderStateMixin {
   String get name => widget.name;
-  Map<dynamic, dynamic> get price => widget.price;
+  double get price => widget.price;
 
   @override
   void initState() {
     super.initState();
-    print(price.values);
+    print(price);
   }
 
   @override
@@ -108,7 +108,7 @@ class _FoodCardState extends State<FoodCard> with SingleTickerProviderStateMixin
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Text(
-            price.values.toString(),
+            price.toString(),
             style: titleStyle,
           ),
           Card(
@@ -147,8 +147,6 @@ class _FoodCardState extends State<FoodCard> with SingleTickerProviderStateMixin
 
     static _ViewModel fromStore(Store<AppState> store) {
     return new _ViewModel(
-            items: store.state.menu.item.items,
-        requestedItems: store.state.menu.requestedList,
         goToAddItem: () async {
           store.dispatch(NavigateToAction.push('/addItem'));
         }

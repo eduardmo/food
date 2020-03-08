@@ -14,7 +14,7 @@ UserState _$UserStateFromJson(Map<String, dynamic> json) {
     isAdmin: json['isAdmin'] as bool,
     adminMenus: (json['adminMenus'] as List)
         ?.map((e) =>
-    e == null ? null : MenuState.fromJson(e as Map<String, dynamic>))
+            e == null ? null : MenuState.fromJson(e as Map<String, dynamic>))
         ?.toList(),
   );
 }

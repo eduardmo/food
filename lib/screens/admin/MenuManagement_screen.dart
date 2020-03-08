@@ -24,10 +24,7 @@ class MenuManagement extends StatelessWidget {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text("Menu Management",
-                        style: Theme
-                            .of(context)
-                            .textTheme
-                            .subtitle1,
+                        style: Theme.of(context).textTheme.subtitle,
                         textAlign: TextAlign.left),
                   ),
                   ListView(
@@ -35,37 +32,35 @@ class MenuManagement extends StatelessWidget {
                       shrinkWrap: true, // use it
                       children: vm.menus.map((MenuState e) {
                         return Card(
-                            child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Column(
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                    children: [
-                                      Text(e.Name,
-                                          style: Theme
-                                              .of(context)
-                                              .textTheme
-                                              .bodyText1),
-                                      Row(
-                                        children: <Widget>[
-                                          Text(e.Email,
-                                              style: Theme
-                                                  .of(context)
+                            child: InkWell(
+                              onTap: (){vm.onPressMenuDetail(e.id);},
+                                child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(e.name,
+                                              style: Theme.of(context)
                                                   .textTheme
-                                                  .caption),
-                                          Text(" | ",
-                                              style: Theme
-                                                  .of(context)
-                                                  .textTheme
-                                                  .caption),
-                                          Text(e.Phone,
-                                              style: Theme
-                                                  .of(context)
-                                                  .textTheme
-                                                  .caption),
-                                        ],
-                                      )
-                                    ])));
+                                                  .body1),
+                                          Row(
+                                            children: <Widget>[
+                                              Text(e.email,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .caption),
+                                              Text(" | ",
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .caption),
+                                              Text(e.phone,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .caption),
+                                            ],
+                                          )
+                                        ]))));
                       }).toList())
                 ])),
             floatingActionButton: FloatingActionButton(
@@ -82,24 +77,25 @@ class MenuManagement extends StatelessWidget {
 
 class _ViewModel {
   final Function onPressAddMenu;
+  final Function onPressMenuDetail;
 
   final List<MenuState> menus;
 
-  _ViewModel({this.menus, this.onPressAddMenu});
+  _ViewModel({this.menus, this.onPressAddMenu, this.onPressMenuDetail});
 
   static _ViewModel fromStore(Store<AppState> store) {
     if (store.state.user.adminMenus == null) {
       store.dispatch(retrieveAdminMenus);
-      return new _ViewModel(
-          menus: new List<MenuState>()
-      );
+      return new _ViewModel(menus: new List<MenuState>());
     }
 
     return new _ViewModel(
         menus: store.state.user.adminMenus,
         onPressAddMenu: () {
-          store.dispatch(NavigateToAction.push("/admin/AddMenu"));
-        }
-    );
+          store.dispatch(NavigateToAction.push("/admin/Menu/Add" ));
+        },
+        onPressMenuDetail: (String menuid) {
+          store.dispatch(NavigateToAction.push("/admin/Menu/Detail",arguments: menuid));
+        });
   }
 }

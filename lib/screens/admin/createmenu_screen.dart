@@ -35,15 +35,15 @@ class _ViewModel {
 
   static _ViewModel fromStore(Store<AppState> store) {
     return new _ViewModel(onFormSubmit: (MenuState menuState) {
-      store.dispatch(SaveNewMenu(menuState));
+      store.dispatch(saveNewMenu(menuState));
     });
   }
 }
 
 class _MenuFormData {
-  String RestaurantName = "";
+  String restaurantName = "";
   String email = "";
-  String phone = null;
+  String phone;
   String address = "";
 }
 
@@ -84,7 +84,7 @@ class MenuFormState extends State<MenuForm> {
               },
               keyboardType: TextInputType.text,
               onSaved: (value) {
-                _menuFormData.RestaurantName = value;
+                _menuFormData.restaurantName = value;
               },
               decoration: InputDecoration(hintText: "Restaurant Name"),
             ),
@@ -135,10 +135,10 @@ class MenuFormState extends State<MenuForm> {
                   if (_createMenuKey.currentState.validate()) {
                     _createMenuKey.currentState.save();
                     this.onFormSubmit(new MenuState(
-                        Name: _menuFormData.RestaurantName,
-                        Address: _menuFormData.address,
-                        Phone: _menuFormData.phone,
-                        Email: _menuFormData.email,
+                        name: _menuFormData.restaurantName,
+                        address: _menuFormData.address,
+                        phone: _menuFormData.phone,
+                        email: _menuFormData.email,
                         isActive: false));
                   }
                 },

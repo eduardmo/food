@@ -10,6 +10,7 @@ import 'package:food/screens/category_list.dart';
 import 'package:food/screens/dashboard.dart';
 import 'package:food/screens/product_page.dart';
 import 'package:food/store/store.dart';
+import 'package:food/screens/admin/MenuDetail_screen.dart';
 
 import 'screens/home_page.dart';
 
@@ -47,6 +48,7 @@ class FoodApp extends StatelessWidget {
   }
 
 Route _getRoute(RouteSettings settings) {
+  print(settings);
 
     switch (settings.name) {
       case '/login':
@@ -54,13 +56,15 @@ Route _getRoute(RouteSettings settings) {
       case '/dashboard':
         return _buildRoute(settings, Dashboard());
       case '/categoryList':
-        return _buildRoute(settings, CategoryList());
+        return _buildRoute(settings, CategoryList(categoryId:settings.arguments));
       case '/addItem':
         return _buildRoute(settings, ProductPage("hallo"));
       case '/admin':
         return _buildRoute(settings, AdminDashboard());
-      case '/admin/AddMenu':
+      case '/admin/Menu/Add':
         return _buildRoute(settings, CreateMenu());
+      case '/admin/Menu/Detail':
+        return _buildRoute(settings, AdminMenuDetail(menuId:settings.arguments));
 
       default:
        return  this.store.state.auth.loginSuccess ? _buildRoute(settings, Dashboard()) : _buildRoute(settings, HomePage());

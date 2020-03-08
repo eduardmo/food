@@ -3,16 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
 import 'package:food/actions/auth_action.dart';
-import 'package:food/actions/menu_actions.dart';
+import 'package:food/actions/category_action.dart';
+import 'package:food/actions/menu_action.dart';
+import 'package:food/actions/item_action.dart';
 import 'package:food/containers/fryo_icons.dart';
 import 'package:food/models/app_state.dart';
+import 'package:food/models/category_state.dart';
+import 'package:food/models/items_state.dart';
 import 'package:food/models/user_state.dart';
 import 'package:food/styles/colors.dart';
 import 'package:food/styles/styles.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:redux/redux.dart';
-
-import '../actions/menu_actions.dart';
 import 'dashboard_page/dashboard_settings.dart';
 
 class Dashboard extends StatefulWidget {
@@ -198,14 +200,13 @@ Widget headerTopCategories(_ViewModel vm) {
       SizedBox(
         height: 130,
         child: ListView.builder(
-          itemCount: vm.items.length,
+          itemCount: vm.categories.length,
           scrollDirection: Axis.horizontal,
           shrinkWrap: true,
           itemBuilder: (_, int i) {
-            String key = vm.items.keys.elementAt(i);
-            Map<dynamic, dynamic> value = vm.items.values.elementAt(i);
-            return headerCategoryItem(key, value['url'],
-                onPressed: () => {vm.onListCategoryItems(value)});
+            CategoryState category = vm.categories.elementAt(i);
+            return headerCategoryItem(category.categoryName, category.image,
+                onPressed: () => {vm.onListCategoryItems(category.id)});
           },
         ),
       )
@@ -273,10 +274,12 @@ class _ViewModel {
   final Function onAdminButtonClicked;
   final Function onUserProfileClicked;
 
-  final Map<String, dynamic> items;
+  final List<ItemState> items;
+  final List<CategoryState> categories;
+
   final UserState user;
 
-  final Function(Map<dynamic, dynamic> itemValues) onListCategoryItems;
+  final Function(String categoryId) onListCategoryItems;
 
   _ViewModel({
     this.onPressLogOut,
@@ -285,21 +288,30 @@ class _ViewModel {
     this.onAdminButtonClicked,
     this.onUserProfileClicked,
     this.items,
+    this.categories,
     this.user,
     this.onListCategoryItems
   });
 
   static _ViewModel fromStore(Store<AppState> store) {
+
     return new _ViewModel(
-        items: store.state.menu.item.items,
         user: store.state.user,
-        onListCategoryItems: (itemValues) async {
-          await store.dispatch(RequestCategoryList(itemValues));
-          await store.dispatch(NavigateToAction.push('/categoryList'));
+
+        //Only Retrieve active Categories
+        categories: store.state.categories.where((e){print(e); return e.menuId == store.state.menus.where((f)=>f.isActive==true).first.id;}).toList(),
+        
+        //Only Return active Items
+        items: store.state.items.where((e)=> e.menuId == store.state.menus.where((f)=>f.isActive==true).first.id).toList(),
+
+        onListCategoryItems: (categoryId) async {
+          await store.dispatch(NavigateToAction.push('/categoryList',arguments: categoryId));
         },
         onRefreshCallback: (_refreshController) async {
           await Future.delayed(Duration(milliseconds: 1000));
-          await store.dispatch(retrieveItem);
+          await store.dispatch(retrieveCategories);
+          await store.dispatch(retrieveItems);
+
           _refreshController.refreshCompleted();
         },
         onLoadingCallback: (_refreshController) async {

@@ -2,9 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:food/actions/auth_action.dart';
-import 'package:food/actions/menu_actions.dart';
 import 'package:food/containers/buttons.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:redux/redux.dart';
 import '../models/app_state.dart';
 import '../styles/colors.dart';
@@ -20,7 +18,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-RefreshController _refreshController = RefreshController(initialRefresh: false);
 
   @override
   Widget build(BuildContext context) {
@@ -95,8 +92,7 @@ RefreshController _refreshController = RefreshController(initialRefresh: false);
     return new _ViewModel(
 
         onPressedCallback: () {
-        store.dispatch(createLogInMiddleware);
-        store.dispatch(retrieveItem);    
+          store.dispatch(createLogInMiddleware);
         });
   }
 }
