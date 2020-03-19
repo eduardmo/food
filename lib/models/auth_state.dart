@@ -3,7 +3,7 @@ import 'package:meta/meta.dart';
 
 part 'auth_state.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(nullable: true)
 @immutable
 class AuthState {
   final bool loginRequest;

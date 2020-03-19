@@ -60,7 +60,6 @@ ThunkAction<AppState> createLogOutMiddleware = (Store<AppState> store) async {
     await _auth.signOut();
     store.dispatch(UserLogout());
     store.dispatch(NavigateToAction.replace('/'));
-    print('logging out...');
   } catch (error) {
     print(error);
   }

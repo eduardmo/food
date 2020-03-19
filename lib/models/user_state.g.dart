@@ -16,6 +16,7 @@ UserState _$UserStateFromJson(Map<String, dynamic> json) {
         ?.map((e) =>
             e == null ? null : MenuState.fromJson(e as Map<String, dynamic>))
         ?.toList(),
+    cartState: CartState.fromJson(json['cartState'] as Map<String, dynamic>),
   );
 }
 
@@ -24,5 +25,6 @@ Map<String, dynamic> _$UserStateToJson(UserState instance) => <String, dynamic>{
       'email': instance.email,
       'uid': instance.uid,
       'isAdmin': instance.isAdmin,
+      'cartState': instance.cartState,
       'adminMenus': instance.adminMenus,
     };

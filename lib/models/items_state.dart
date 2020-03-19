@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'items_state.g.dart';
 
-@JsonSerializable(explicitToJson: true)
+@JsonSerializable(explicitToJson: true, nullable: true)
 @immutable
 class ItemState {
   final String id;

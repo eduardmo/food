@@ -31,7 +31,7 @@ class MenuState {
       _$MenuStateFromJson(json);
 
   MenuState copyWith({final ItemState item,
-    final String Name,
+    final String name,
     final Map<dynamic, dynamic> requestedList}) {
     return new MenuState(
         id: id ?? this.id,

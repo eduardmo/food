@@ -7,6 +7,5 @@ Reducer<List<ItemState>> itemsReducer = combineReducers([
 ]);
 
 List<ItemState> itemsRequestReducer(List<ItemState> categoryState, RequestItems action) {
-  print(action.items);
   return action.items;
 }

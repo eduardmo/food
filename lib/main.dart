@@ -48,8 +48,6 @@ class FoodApp extends StatelessWidget {
   }
 
 Route _getRoute(RouteSettings settings) {
-  print(settings);
-
     switch (settings.name) {
       case '/login':
         return _buildRoute(settings, HomePage());

@@ -60,14 +60,12 @@ class _CategoryList extends State<CategoryList> {
           IconButton(
               icon: Icon(Icons.search),
               onPressed: () {
-                print(vm.items);
               }),
           Stack(
             children: <Widget>[
               IconButton(
                   icon: Icon(Icons.shopping_cart),
                   onPressed: () {
-                    print(vm.items);
                   }),
               Positioned(
                 right: 0,

@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
 import 'package:food/models/app_state.dart';
-import 'package:food/models/items_state.dart';
 import 'package:food/models/menu_state.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_thunk/redux_thunk.dart';
