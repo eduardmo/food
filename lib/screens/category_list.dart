@@ -120,7 +120,7 @@ class _ViewModel {
         items:
             store.state.items.where((e) => e.categoryId == categoryId).toList(),
         goToHomePage: () => store.dispatch(NavigateToAction.pop()),
-        itemCartCount: store.state.cartItems.itemState.length == null ? 0 : store.state.cartItems.itemState.length,
+        itemCartCount: store.state.cartItems.itemState == null ? 0 : store.state.cartItems.itemState.length,
         goToCartPage: () => store.dispatch(NavigateToAction.push('/cart')),
         );
   }
