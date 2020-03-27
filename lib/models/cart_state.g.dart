@@ -16,10 +16,12 @@ CartState _$CartStateFromJson(Map<String, dynamic> json) {
         ?.map((e) =>
             e == null ? null : ItemState.fromJson(e as Map<String, dynamic>))
         ?.toList(),
+    image: json['image'] as String,
   );
 }
 
 Map<String, dynamic> _$CartStateToJson(CartState instance) => <String, dynamic>{
       'itemState': instance.itemState,
       'order': instance.order,
+      'image': instance.image,
     };

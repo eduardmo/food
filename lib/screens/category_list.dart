@@ -28,12 +28,13 @@ class _CategoryList extends State<CategoryList> {
       return _ViewModel.fromStore(store, categoryId);
     }, builder: (BuildContext context, _ViewModel vm) {
       return Scaffold(
+        backgroundColor: Color(0xffF4F7FA),
         body: Container(
           margin: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
           child: Column(
             children: <Widget>[
               buildAppBar(vm),
-              //buildFoodFilter(),
+              //buildFoodFilter (),
               Divider(),
               buildFoodList(vm),
             ],
@@ -98,7 +99,9 @@ class _CategoryList extends State<CategoryList> {
           return new GridTile(
               child: FoodCard(
                   vm.items.elementAt(index).name,
-                  vm.items.elementAt(index).price) //just for testing, will fill with image later
+                  vm.items.elementAt(index).price,
+                  vm.items.elementAt(index).image
+                  ) //just for testing, will fill with image later
               );
         },
       );

@@ -29,7 +29,7 @@ class _DashboardState extends State<Dashboard> {
   int _selectedIndex = 0;
   RefreshController _refreshController =
   RefreshController(initialRefresh: false);
-
+   Size get preferredSize => Size.fromHeight(kToolbarHeight);
   @override
   Widget build(BuildContext context) {
     return new StoreConnector<AppState, _ViewModel>(
@@ -37,7 +37,6 @@ class _DashboardState extends State<Dashboard> {
         builder: (BuildContext context, _ViewModel vm) {
           final _tabs = [
             storeTab(context, vm),
-            Text('Tab2'),
             Text('Tab3'),
             Text('Tab4'),
             DashboardSettings(
@@ -49,34 +48,9 @@ class _DashboardState extends State<Dashboard> {
           return Scaffold(
 
               backgroundColor: bgColor,
-              appBar: AppBar(
-                centerTitle: true,
-                elevation: 0,
-                leading: IconButton(
-                  onPressed: () {
-                    vm.onPressLogOut();
-                  },
-                  iconSize: 21,
-                  icon: Icon(Fryo.funnel),
-                ),
-                backgroundColor: primaryColor,
-                title:
-                Text(
-                    'Fryo', style: logoWhiteStyle, textAlign: TextAlign.center),
-                actions: <Widget>[
-                  IconButton(
-                    padding: EdgeInsets.all(0),
-                    onPressed: () {},
-                    iconSize: 21,
-                    icon: Icon(Fryo.magnifier),
-                  ),
-                  IconButton(
-                    padding: EdgeInsets.all(0),
-                    onPressed: () {},
-                    iconSize: 21,
-                    icon: Icon(Fryo.alarm),
-                  )
-                ],
+              appBar: PreferredSize(
+                preferredSize: preferredSize,
+                child: buildAppBar(vm),
               ),
               body: SmartRefresher(
                 enablePullDown: true,
@@ -115,31 +89,19 @@ class _DashboardState extends State<Dashboard> {
               bottomNavigationBar: BottomNavigationBar(
                 items: <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
-                      icon: Icon(Fryo.shop),
+                      icon: Icon(Icons.store),
                       title: Text(
                         'Store',
                         style: tabLinkStyle,
                       )),
                   BottomNavigationBarItem(
-                      icon: Icon(Fryo.cart),
-                      title: Text(
-                        'My Cart',
-                        style: tabLinkStyle,
-                      )),
-                  BottomNavigationBarItem(
-                      icon: Icon(Fryo.heart_1),
-                      title: Text(
-                        'Favourites',
-                        style: tabLinkStyle,
-                      )),
-                  BottomNavigationBarItem(
-                      icon: Icon(Fryo.user_1),
+                      icon: Icon(Icons.person),
                       title: Text(
                         'Profile',
                         style: tabLinkStyle,
                       )),
                   BottomNavigationBarItem(
-                      icon: Icon(Fryo.cog_1),
+                      icon: Icon(Icons.settings),
                       title: Text(
                         'Settings',
                         style: tabLinkStyle,
@@ -152,6 +114,50 @@ class _DashboardState extends State<Dashboard> {
               )
           );
         }
+    );
+  }
+
+  Widget buildAppBar(_ViewModel vm) {
+    int items = vm.order.length;
+    // Provider.of<MyCart>(context).cartItems.forEach((cart) {
+    // items += cart.quantity;
+    // });
+    return SafeArea(
+      child: Row(
+        children: <Widget>[
+          IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                vm.goToHomePage();
+              }),
+          Spacer(),
+          IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {
+              }),
+          Stack(
+            children: <Widget>[
+              IconButton(
+                  icon: Icon(Icons.shopping_cart),
+                  onPressed: () {
+                    vm.goToCartPage();
+                  }),
+              Positioned(
+                right: 0,
+                child: Container(
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.all(4),
+                  decoration: BoxDecoration(shape: BoxShape.circle),
+                  child: Text(
+                    '$items',
+                    style: TextStyle(fontSize: 12, color: Colors.black),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -249,17 +255,31 @@ Widget deals(String dealTitle, _ViewModel vm,
         sectionHeader(dealTitle, onViewMore: onViewMore),
         SizedBox(
           height: 250,
-          child: ListView(
+          child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            children: (items != null)
-                ? items
-                : <Widget>[
+            itemCount: vm.order.length,
+            itemBuilder: (context, index) {
+              return Card(
+                child: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage(vm.order[index].image),
+                      fit: BoxFit.cover
+                    )
+                  ),
+                  child: Row(
+                    children: <Widget>[ 
                     Container(
                       margin: EdgeInsets.only(left: 15),
-                      child: Text('No items available at this moment.',
+                      child: Text(vm.order[index].name,
+                          
                           style: taglineText),
-                    )
-                  ],
+                    ) 
+                  ]
+                  ),
+                ),
+              );
+            },
           ),
         )
       ],
@@ -273,6 +293,8 @@ class _ViewModel {
   final Function(RefreshController _refreshController) onLoadingCallback;
   final Function onAdminButtonClicked;
   final Function onUserProfileClicked;
+  final Function() goToHomePage;
+  final Function() goToCartPage;
 
   final List<ItemState> items;
   final List<CategoryState> categories;
@@ -281,6 +303,7 @@ class _ViewModel {
 
   final Function(String categoryId) onListCategoryItems;
 
+  final List<ItemState> order;
   _ViewModel({
     this.onPressLogOut,
     this.onRefreshCallback(RefreshController _refreshController),
@@ -290,7 +313,10 @@ class _ViewModel {
     this.items,
     this.categories,
     this.user,
-    this.onListCategoryItems
+    this.onListCategoryItems,
+    this.goToCartPage,
+    this.goToHomePage,
+    this.order,
   });
 
   static _ViewModel fromStore(Store<AppState> store) {
@@ -298,6 +324,7 @@ class _ViewModel {
     return new _ViewModel(
         user: store.state.user,
 
+        order: store.state.cartItems.order == null ? List() : store.state.cartItems.order,
         //Only Retrieve active Categories
         categories: store.state.categories.where((e){return e.menuId == store.state.menus.where((f)=>f.isActive==true).first.id;}).toList(),
         
@@ -326,6 +353,12 @@ class _ViewModel {
         },
         onUserProfileClicked: () {
           print("onUserProfile Clicked");
-        });
+        },
+        goToHomePage: () => store.dispatch(createLogOutMiddleware),
+        goToCartPage: () {
+          store.dispatch(NavigateToAction.push('/cart'));
+        } ,
+        );
   }
 }
+

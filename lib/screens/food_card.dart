@@ -14,14 +14,16 @@ class FoodCard extends StatefulWidget {
   // FoodCard(this.food);
    final String name;
    final double price;
+   final String image;
 
-   FoodCard(this.name, this.price);
+   FoodCard(this.name, this.price, this.image);
   _FoodCardState createState() => _FoodCardState();
 }
 
 class _FoodCardState extends State<FoodCard> with SingleTickerProviderStateMixin {
   String get name => widget.name;
   double get price => widget.price;
+  String get image => widget.image;
 
   @override
   void initState() {
@@ -85,7 +87,7 @@ class _FoodCardState extends State<FoodCard> with SingleTickerProviderStateMixin
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          RatingBar(
+          RatingBar( 
             initialRating: 5.0,
             direction: Axis.horizontal,
             itemCount: 5,
@@ -152,7 +154,8 @@ class _FoodCardState extends State<FoodCard> with SingleTickerProviderStateMixin
         goToAddItem: (foodCartState) async {
         store.dispatch(AddToCart(new ItemState(
           name: foodCartState.name,
-          price: foodCartState.price
+          price: foodCartState.price,
+          image: foodCartState.image
         )));
         }
       );
