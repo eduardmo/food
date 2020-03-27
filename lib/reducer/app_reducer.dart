@@ -1,11 +1,13 @@
 import 'package:food/actions/Admin/admin_action.dart';
 import 'package:food/actions/auth_action.dart';
+import 'package:food/actions/cart_action.dart';
 import 'package:food/actions/user_action.dart';
 import 'package:food/actions/menu_action.dart';
 import 'package:food/actions/category_action.dart';
 import 'package:food/actions/item_action.dart';
 
 import 'package:food/models/app_state.dart';
+import 'package:food/reducer/cart_reducer.dart';
 import 'package:food/reducer/user_reducer.dart';
 import 'package:food/reducer/category_reducer.dart';
 import 'package:food/reducer/item_reducer.dart';
@@ -42,7 +44,18 @@ AppState appReducer(AppState state, action) {
     case SetUserState:
     case RequestAdminMenu:
       return state.copyWith(user: userReducer(state.user, action));
+  // Logic for the CartState related stuff
+    case RequestCartState:
+      return state.copyWith(cartItems: cartReducer(state.cartItems, action));
+    case AddToCart:
+      return state.copyWith(cartItems: cartReducer(state.cartItems, action));
+    case EmptyCart:
+      return state.copyWith(cartItems: cartReducer(state.cartItems, action));
+    case DeleteItem:
+      return state.copyWith(cartItems: cartReducer(state.cartItems, action));
+  //Logic for order
+    case CreateOrder:
+      return state.copyWith(cartItems: cartReducer(state.cartItems, action));
   }
-
   return state;
 }

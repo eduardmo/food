@@ -6,6 +6,7 @@ import 'package:food/middleware/middleware.dart';
 import 'package:food/models/app_state.dart';
 import 'package:food/screens/admin/AdminDashboard_screen.dart';
 import 'package:food/screens/admin/createmenu_screen.dart';
+import 'package:food/screens/cart_page.dart';
 import 'package:food/screens/category_list.dart';
 import 'package:food/screens/dashboard.dart';
 import 'package:food/screens/product_page.dart';
@@ -63,7 +64,8 @@ Route _getRoute(RouteSettings settings) {
         return _buildRoute(settings, CreateMenu());
       case '/admin/Menu/Detail':
         return _buildRoute(settings, AdminMenuDetail(menuId:settings.arguments));
-
+      case '/cart':
+        return _buildRoute(settings, CartPage());
       default:
        return  this.store.state.auth.loginSuccess ? _buildRoute(settings, Dashboard()) : _buildRoute(settings, HomePage());
     }

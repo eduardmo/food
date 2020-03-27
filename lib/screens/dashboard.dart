@@ -299,7 +299,7 @@ class _ViewModel {
         user: store.state.user,
 
         //Only Retrieve active Categories
-        categories: store.state.categories.where((e){print(e); return e.menuId == store.state.menus.where((f)=>f.isActive==true).first.id;}).toList(),
+        categories: store.state.categories.where((e){return e.menuId == store.state.menus.where((f)=>f.isActive==true).first.id;}).toList(),
         
         //Only Return active Items
         items: store.state.items.where((e)=> e.menuId == store.state.menus.where((f)=>f.isActive==true).first.id).toList(),

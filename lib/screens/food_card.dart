@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
+import 'package:food/actions/cart_action.dart';
+import 'package:food/actions/user_action.dart';
+import 'package:food/models/items_state.dart';
 import 'package:redux/redux.dart';
 
 import '../models/app_state.dart';
@@ -23,7 +26,6 @@ class _FoodCardState extends State<FoodCard> with SingleTickerProviderStateMixin
   @override
   void initState() {
     super.initState();
-    print(price);
   }
 
   @override
@@ -116,7 +118,7 @@ class _FoodCardState extends State<FoodCard> with SingleTickerProviderStateMixin
             shape: roundedRectangle4,
             color: mainColor,
             child: InkWell(
-              onTap: vm.goToAddItem,
+              onTap: () => {vm.goToAddItem(this)}, 
               splashColor: Colors.white70,
               customBorder: roundedRectangle4,
               child: Icon(Icons.add),
@@ -141,14 +143,17 @@ class _FoodCardState extends State<FoodCard> with SingleTickerProviderStateMixin
   class _ViewModel {
     final Map<String, dynamic> items;
     final Map<dynamic, dynamic> requestedItems;
-    final Function() goToAddItem;
+    final Function(_FoodCardState foodCartState) goToAddItem;
 
     _ViewModel({this.items, this.requestedItems, this.goToAddItem});
 
     static _ViewModel fromStore(Store<AppState> store) {
     return new _ViewModel(
-        goToAddItem: () async {
-          store.dispatch(NavigateToAction.push('/addItem'));
+        goToAddItem: (foodCartState) async {
+        store.dispatch(AddToCart(new ItemState(
+          name: foodCartState.name,
+          price: foodCartState.price
+        )));
         }
       );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
+import 'package:food/actions/user_action.dart';
 import 'package:food/containers/buttons.dart';
 import 'package:food/models/app_state.dart';
 import 'package:food/styles/colors.dart';
@@ -131,7 +132,7 @@ class _ProductPageState extends State<ProductPage> {
                                   ),
                                   Container(
                                     width: 180,
-                                    child: froyoFlatBtn('Add to Cart', () {}),
+                                    child: froyoFlatBtn('Add to Cart', () {vm.addTocart();}),
                                   )
                                 ],
                               ),
@@ -172,11 +173,16 @@ class _ViewModel {
   final Map<String, dynamic> items;
   final Map<dynamic, dynamic> requestedItems;
   final Function() popPage;
+  final Function() addTocart;
 
-  _ViewModel({this.items, this.requestedItems, this.popPage});
+  _ViewModel({this.items, this.requestedItems, this.popPage, this.addTocart});
 
   static _ViewModel fromStore(Store<AppState> store) {
     return new _ViewModel(
+        addTocart: () async {
+          // store.dispatch(AddToCart());
+        },
+
         popPage: () async {
           store.dispatch(NavigateToAction.pop());
         });

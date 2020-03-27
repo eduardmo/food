@@ -8,21 +8,27 @@ part 'cart_state.g.dart';
 class CartState {
 @JsonKey(nullable: true, includeIfNull: true)
 final List<ItemState> itemState;
+@JsonKey(nullable: true, includeIfNull: true)
+final List<ItemState> order;
 
-CartState({List<ItemState> itemState}) : itemState = null ?? new List<ItemState>();
+CartState({this.itemState, this.order});
 
 Map<String, dynamic> toJson() => _$CartStateToJson(this);
 
 factory CartState.fromJson(Map<String, dynamic> json) =>_$CartStateFromJson(json);
 
-CartState copyWith(
-      {final List<ItemState> itemState}) {
+CartState copyWith({
+  final List<ItemState> itemState,
+  final List<ItemState> order,
+  }) {
     return new CartState(
-        itemState: itemState ?? this.itemState);
+        itemState: itemState ?? this.itemState,
+        order: order ?? this.order
+    );
   }
 
   @override
   String toString() {
-    return "{itemState: $itemState}";
+    return "{cartState: $itemState, order: $order}";
   }
 }

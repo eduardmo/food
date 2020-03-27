@@ -17,7 +17,6 @@ class RequestAdminMenu {
 }
 
 ThunkAction<AppState> retrieveAdminMenuDetail(MenuState menu) {
-  print(menu.id);
   return (Store<AppState> store) async {
     try {
      DocumentReference itemsReference = await Firestore.instance
@@ -25,7 +24,6 @@ ThunkAction<AppState> retrieveAdminMenuDetail(MenuState menu) {
           .document(menu.id)
           .get()
           .then((DocumentSnapshot query) async {
-            print(query["Items"].get());
         return query["Items"];
       }).catchError((error) {
         print(error);

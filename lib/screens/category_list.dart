@@ -44,7 +44,7 @@ class _CategoryList extends State<CategoryList> {
   }
 
   Widget buildAppBar(_ViewModel vm) {
-    int items = 0;
+    int items = vm.itemCartCount;
     // Provider.of<MyCart>(context).cartItems.forEach((cart) {
     // items += cart.quantity;
     // });
@@ -66,6 +66,7 @@ class _CategoryList extends State<CategoryList> {
               IconButton(
                   icon: Icon(Icons.shopping_cart),
                   onPressed: () {
+                    vm.goToCartPage();
                   }),
               Positioned(
                 right: 0,
@@ -108,11 +109,16 @@ class _CategoryList extends State<CategoryList> {
 class _ViewModel {
   final List<ItemState> items;
   final Function() goToHomePage;
-  _ViewModel({this.items, this.goToHomePage});
+  final int itemCartCount;
+  final Function() goToCartPage;
+  _ViewModel({this.items, this.goToHomePage, this.itemCartCount, this.goToCartPage});
   static _ViewModel fromStore(Store<AppState> store, String categoryId) {
     return new _ViewModel(
         items:
             store.state.items.where((e) => e.categoryId == categoryId).toList(),
-        goToHomePage: () => store.dispatch(NavigateToAction.pop()));
+        goToHomePage: () => store.dispatch(NavigateToAction.pop()),
+        itemCartCount: store.state.cartItems.itemState.length == null ? 0 : store.state.cartItems.itemState.length,
+        goToCartPage: () => store.dispatch(NavigateToAction.push('/cart')),
+        );
   }
 }

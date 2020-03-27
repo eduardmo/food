@@ -10,11 +10,10 @@ class UserState {
   final String email;
   final String uid;
   final bool isAdmin;
-  final CartState cartState;
   @JsonKey(nullable: true)
   final List<MenuState> adminMenus;
 
-  UserState({this.name, this.email, this.uid, this.isAdmin, this.adminMenus, this.cartState});
+  UserState({this.name, this.email, this.uid, this.isAdmin, this.adminMenus});
 
   Map<String, dynamic> toJson() => _$UserStateToJson(this);
 
@@ -26,15 +25,15 @@ class UserState {
       final String email,
       final String uid,
       final bool isAdmin,
-      final CartState cartState,
-      final List<MenuState> adminMenus}) {
+      final List<MenuState> adminMenus,
+     }) {
     return new UserState(
         name: name ?? this.name,
         email: email ?? this.email,
         uid: uid ?? this.uid,
         isAdmin: isAdmin ?? this.isAdmin,
-        cartState: cartState ?? this.cartState,
-        adminMenus: adminMenus ?? this.adminMenus);
+        adminMenus: adminMenus ?? this.adminMenus,
+       );
   }
 
   @override

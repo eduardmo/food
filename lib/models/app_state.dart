@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:food/models/cart_state.dart';
 import 'package:food/models/category_state.dart';
 import 'package:food/models/items_state.dart';
 import 'package:meta/meta.dart';
@@ -14,12 +15,13 @@ class AppState {
   final List<MenuState> menus;
   final List<CategoryState> categories;
   final List<ItemState> items;
+  final CartState cartItems;
 
   AppState({
     List<MenuState> menus,
     List<CategoryState> categories,
     List<ItemState> items,
-
+    CartState cartItems,
     AuthState auth,
     UserState user,
   })
@@ -27,7 +29,8 @@ class AppState {
         user = user ?? new UserState(),
         menus = menus ?? new List<MenuState>(),
         categories = categories ?? new List<CategoryState>(),
-        items = items ?? new List<ItemState>();
+        items = items ?? new List<ItemState>(),
+        cartItems = cartItems ?? new CartState();
 
   factory AppState.fromJson(Map<String, dynamic> json) => AppState(
       auth: json['auth'] == null
@@ -47,7 +50,10 @@ class AppState {
       items: json['items'] == null
           ? null
           : (json['items'] as List).map((e)=>
-          e == null ? null : ItemState.fromJson(e as Map<String, dynamic>)).toList()
+          e == null ? null : ItemState.fromJson(e as Map<String, dynamic>)).toList(),
+      cartItems: json['cartItems'] == null
+          ? null
+          : CartState.fromJson(json['cartState'] as Map<String, dynamic>), 
   );
 
   static AppState rehydrationJSON(dynamic json) {
@@ -57,20 +63,23 @@ class AppState {
       user: json['user'] == null ? null : new UserState.fromJson(json['user']),
       menus: json['menus'] == null ? null : (json['menus'] as List).map((e)=> e == null ? null : new MenuState.fromJson(e as Map<String, dynamic>)).toList(),
       categories: json['categories'] == null ? null :(json['categories'] as List).map((e)=> e == null ? null : new CategoryState.fromJson(e as Map<String, dynamic>)).toList(),
-      items: json['items'] == null ? null : (json['items'] as List).map((e)=> e == null ? null : new ItemState.fromJson(e as Map<String, dynamic>)).toList()
+      items: json['items'] == null ? null : (json['items'] as List).map((e)=> e == null ? null : new ItemState.fromJson(e as Map<String, dynamic>)).toList(),
+      cartItems: json['cartItems'] == null ? null : new CartState.fromJson(json['cartItems']),
+
     );
   }
 
   Map<String, dynamic> toJson() =>
-      {'auth': auth.toJson(), 'user': user.toJson(),'menus': menus,'categories':categories,'items':items};
+      {'auth': auth.toJson(), 'user': user.toJson(),'menus': menus,'categories':categories,'items':items, 'cartItems': cartItems};
 
-  AppState copyWith({AuthState auth, List<MenuState> menus, UserState user,List<CategoryState> categories,List<ItemState> items}) {
+  AppState copyWith({AuthState auth, List<MenuState> menus, UserState user,List<CategoryState> categories,List<ItemState> items, CartState cartItems}) {
     return new AppState(
         auth: auth ?? this.auth,
         user: user ?? this.user,
         menus: menus ?? this.menus,
         categories: categories ?? this.categories,
         items: items ?? this.items,
+        cartItems: cartItems ?? this.cartItems,
         );
   }
 
@@ -81,7 +90,8 @@ class AppState {
       user: $user,
       menus: $menus,
       categories: $categories,
-      items: $items
+      items: $items,
+      cartItems: $cartItems,
     }''';
   }
 }
