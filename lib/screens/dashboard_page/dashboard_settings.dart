@@ -16,24 +16,25 @@ class DashboardSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        alignment: AlignmentDirectional(0.0, 0.0),
-        child: Column(
-          children: <Widget>[
-            Visibility(
-              visible: isAdmin,
-              child: RaisedButton(
-                child: Text("Admin"),
-                onPressed: onAdminButtonClicked,
-              ),
-            ),
-            RaisedButton(
-                child: Text("User Profile"), onPressed: onUserProfileClicked),
-            RaisedButton(
-              child: Text("Logout"),
-              onPressed: onLogoutClicked,
-            )
-          ],
-        ));
+    return ListView(
+              padding: const EdgeInsets.all(8),
+              children:[
+                Visibility(
+                  visible: isAdmin,
+                  child: RaisedButton(
+                    child: Text("Admin"),
+                    onPressed: onAdminButtonClicked,
+                  ),
+                ),
+                RaisedButton(
+                  child: Text("Balance Management"),
+                  onPressed: onLogoutClicked,
+                ),
+                RaisedButton(
+                  child: Text("Logout"),
+                  onPressed: onLogoutClicked,
+                )
+              ]
+            );
   }
 }

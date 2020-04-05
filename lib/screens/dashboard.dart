@@ -37,8 +37,7 @@ class _DashboardState extends State<Dashboard> {
         builder: (BuildContext context, _ViewModel vm) {
           final _tabs = [
             storeTab(context, vm),
-            Text('Tab3'),
-            Text('Tab4'),
+            Text('Profile'),
             DashboardSettings(
                 vm.user.isAdmin,
                 vm.onAdminButtonClicked,
