@@ -11,6 +11,8 @@ import 'package:food/actions/item_action.dart';
 import 'package:food/actions/menu_action.dart';
 import 'package:food/actions/category_action.dart';
 
+import 'mybalance_action.dart';
+
 class UserLoginRequest {}
 
 class UserLoginSuccess {
@@ -113,6 +115,8 @@ ThunkAction<AppState> createLogInMiddleware = (Store<AppState> store) async {
     await store.dispatch(retrieveMenu); 
     await store.dispatch(retrieveCategories);
     await store.dispatch(retrieveItems);
+    await store.dispatch(retrieveBalance(userFirebase.uid));
+    await store.dispatch(retrieveTopUpRequest(userFirebase.uid));
 
     //Open Dashboard
     await store.dispatch(NavigateToAction.replace('/dashboard'));

@@ -4,9 +4,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
 import 'package:food/actions/auth_action.dart';
 import 'package:food/actions/category_action.dart';
-import 'package:food/actions/menu_action.dart';
 import 'package:food/actions/item_action.dart';
-import 'package:food/containers/fryo_icons.dart';
 import 'package:food/models/app_state.dart';
 import 'package:food/models/category_state.dart';
 import 'package:food/models/items_state.dart';
@@ -28,8 +26,8 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   int _selectedIndex = 0;
   RefreshController _refreshController =
-  RefreshController(initialRefresh: false);
-   Size get preferredSize => Size.fromHeight(kToolbarHeight);
+      RefreshController(initialRefresh: false);
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
   @override
   Widget build(BuildContext context) {
     return new StoreConnector<AppState, _ViewModel>(
@@ -38,14 +36,9 @@ class _DashboardState extends State<Dashboard> {
           final _tabs = [
             storeTab(context, vm),
             Text('Profile'),
-            DashboardSettings(
-                vm.user.isAdmin,
-                vm.onAdminButtonClicked,
-                vm.onUserProfileClicked,
-                vm.onPressLogOut),
+            DashboardSettings(isAdmin: vm.user.isAdmin),
           ];
           return Scaffold(
-
               backgroundColor: bgColor,
               appBar: PreferredSize(
                 preferredSize: preferredSize,
@@ -60,17 +53,13 @@ class _DashboardState extends State<Dashboard> {
                     Widget body;
                     if (mode == LoadStatus.idle) {
                       body = Text("pull up load");
-                    }
-                    else if (mode == LoadStatus.loading) {
+                    } else if (mode == LoadStatus.loading) {
                       body = CupertinoActivityIndicator();
-                    }
-                    else if (mode == LoadStatus.failed) {
+                    } else if (mode == LoadStatus.failed) {
                       body = Text("Load Failed!Click retry!");
-                    }
-                    else if (mode == LoadStatus.canLoading) {
+                    } else if (mode == LoadStatus.canLoading) {
                       body = Text("release to load more");
-                    }
-                    else {
+                    } else {
                       body = Text("No more Data");
                     }
                     return Container(
@@ -84,7 +73,6 @@ class _DashboardState extends State<Dashboard> {
                 onLoading: () => vm.onLoadingCallback(this._refreshController),
                 child: _tabs[_selectedIndex],
               ),
-
               bottomNavigationBar: BottomNavigationBar(
                 items: <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
@@ -110,10 +98,8 @@ class _DashboardState extends State<Dashboard> {
                 type: BottomNavigationBarType.fixed,
                 fixedColor: Colors.green[600],
                 onTap: _onItemTapped,
-              )
-          );
-        }
-    );
+              ));
+        });
   }
 
   Widget buildAppBar(_ViewModel vm) {
@@ -130,10 +116,7 @@ class _DashboardState extends State<Dashboard> {
                 vm.goToHomePage();
               }),
           Spacer(),
-          IconButton(
-              icon: Icon(Icons.search),
-              onPressed: () {
-              }),
+          IconButton(icon: Icon(Icons.search), onPressed: () {}),
           Stack(
             children: <Widget>[
               IconButton(
@@ -261,21 +244,15 @@ Widget deals(String dealTitle, _ViewModel vm,
               return Card(
                 child: Container(
                   decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: NetworkImage(vm.order[index].image),
-                      fit: BoxFit.cover
-                    )
-                  ),
-                  child: Row(
-                    children: <Widget>[ 
+                      image: DecorationImage(
+                          image: NetworkImage(vm.order[index].image),
+                          fit: BoxFit.cover)),
+                  child: Row(children: <Widget>[
                     Container(
                       margin: EdgeInsets.only(left: 15),
-                      child: Text(vm.order[index].name,
-                          
-                          style: taglineText),
-                    ) 
-                  ]
-                  ),
+                      child: Text(vm.order[index].name, style: taglineText),
+                    )
+                  ]),
                 ),
               );
             },
@@ -286,12 +263,8 @@ Widget deals(String dealTitle, _ViewModel vm,
   );
 }
 
-class _ViewModel {
-  final Function onPressLogOut;
-  final Function(RefreshController _refreshController) onRefreshCallback;
+class _ViewModel {  final Function(RefreshController _refreshController) onRefreshCallback;
   final Function(RefreshController _refreshController) onLoadingCallback;
-  final Function onAdminButtonClicked;
-  final Function onUserProfileClicked;
   final Function() goToHomePage;
   final Function() goToCartPage;
 
@@ -304,11 +277,8 @@ class _ViewModel {
 
   final List<ItemState> order;
   _ViewModel({
-    this.onPressLogOut,
     this.onRefreshCallback(RefreshController _refreshController),
     this.onLoadingCallback(RefreshController _refreshController),
-    this.onAdminButtonClicked,
-    this.onUserProfileClicked,
     this.items,
     this.categories,
     this.user,
@@ -319,45 +289,43 @@ class _ViewModel {
   });
 
   static _ViewModel fromStore(Store<AppState> store) {
-
     return new _ViewModel(
-        user: store.state.user,
+      user: store.state.user,
+      order: store.state.cartItems.order == null
+          ? List()
+          : store.state.cartItems.order,
+      //Only Retrieve active Categories
+      categories: store.state.categories.where((e) {
+        return e.menuId ==
+            store.state.menus.where((f) => f.isActive == true).first.id;
+      }).toList(),
 
-        order: store.state.cartItems.order == null ? List() : store.state.cartItems.order,
-        //Only Retrieve active Categories
-        categories: store.state.categories.where((e){return e.menuId == store.state.menus.where((f)=>f.isActive==true).first.id;}).toList(),
-        
-        //Only Return active Items
-        items: store.state.items.where((e)=> e.menuId == store.state.menus.where((f)=>f.isActive==true).first.id).toList(),
+      //Only Return active Items
+      items: store.state.items
+          .where((e) =>
+              e.menuId ==
+              store.state.menus.where((f) => f.isActive == true).first.id)
+          .toList(),
 
-        onListCategoryItems: (categoryId) async {
-          await store.dispatch(NavigateToAction.push('/categoryList',arguments: categoryId));
-        },
-        onRefreshCallback: (_refreshController) async {
-          await Future.delayed(Duration(milliseconds: 1000));
-          await store.dispatch(retrieveCategories);
-          await store.dispatch(retrieveItems);
+      onListCategoryItems: (categoryId) async {
+        await store.dispatch(
+            NavigateToAction.push('/categoryList', arguments: categoryId));
+      },
+      onRefreshCallback: (_refreshController) async {
+        await Future.delayed(Duration(milliseconds: 1000));
+        await store.dispatch(retrieveCategories);
+        await store.dispatch(retrieveItems);
 
-          _refreshController.refreshCompleted();
-        },
-        onLoadingCallback: (_refreshController) async {
-          await Future.delayed(Duration(milliseconds: 1000));
-          _refreshController.loadComplete();
-        },
-        onPressLogOut: () {
-          store.dispatch(createLogOutMiddleware);
-        },
-        onAdminButtonClicked: () {
-          store.dispatch(NavigateToAction.push('/admin'));
-        },
-        onUserProfileClicked: () {
-          print("onUserProfile Clicked");
-        },
-        goToHomePage: () => store.dispatch(createLogOutMiddleware),
-        goToCartPage: () {
-          store.dispatch(NavigateToAction.push('/cart'));
-        } ,
-        );
+        _refreshController.refreshCompleted();
+      },
+      onLoadingCallback: (_refreshController) async {
+        await Future.delayed(Duration(milliseconds: 1000));
+        _refreshController.loadComplete();
+      },
+      goToHomePage: () => store.dispatch(createLogOutMiddleware),
+      goToCartPage: () {
+        store.dispatch(NavigateToAction.push('/cart'));
+      },
+    );
   }
 }
-

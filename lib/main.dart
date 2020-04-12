@@ -9,6 +9,7 @@ import 'package:food/screens/admin/createmenu_screen.dart';
 import 'package:food/screens/cart_page.dart';
 import 'package:food/screens/category_list.dart';
 import 'package:food/screens/dashboard.dart';
+import 'package:food/screens/dashboard_page/my_balance.dart';
 import 'package:food/screens/product_page.dart';
 import 'package:food/store/store.dart';
 import 'package:food/screens/admin/MenuDetail_screen.dart';
@@ -54,6 +55,8 @@ Route _getRoute(RouteSettings settings) {
         return _buildRoute(settings, HomePage());
       case '/dashboard':
         return _buildRoute(settings, Dashboard());
+      case '/dashboard/myBalance':
+        return _buildRoute(settings, MyBalance());
       case '/categoryList':
         return _buildRoute(settings, CategoryList(categoryId:settings.arguments));
       case '/addItem':
