@@ -1,9 +1,9 @@
-import 'package:firebase_storage/firebase_storage.dart'; // For File Upload To Firestore
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:food/models/balance_history_state.dart';
 import 'package:food/models/topup_request_state.dart';
 import 'package:image_picker/image_picker.dart'; // For Image Picker
-import 'package:path/path.dart' as Path;
 import 'package:food/models/app_state.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
@@ -130,61 +130,141 @@ Function generateAddBalanceFABDialog(BuildContext context, _ViewModel vm) {
         showDialog(
             context: context,
             builder: (BuildContext context) {
-              return Dialog(
-                child: Column(children: [
-                  Text("Add Balance"),
-                ]),
-              );
+              return Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Dialog(
+                      child: Container(
+                    height: 450,
+                    child: Column(children: [
+                      Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text("Add Balance Request",
+                              style: Theme.of(context).textTheme.headline)),
+                      Container(
+                          height: 400,
+                          child: AddBalance(
+                              onTopUpRequestFormSubmit:
+                                  vm.onTopUpRequestFormSubmit,
+                              userid: vm.userid))
+                    ]),
+                  )));
             })
       };
 }
 
 // Create a Form widget.
 class AddBalance extends StatefulWidget {
+  final Function onTopUpRequestFormSubmit;
+  final String userid;
+  AddBalance({this.onTopUpRequestFormSubmit, this.userid});
+
   @override
   AddBalanceState createState() {
-    return AddBalanceState();
+    return AddBalanceState(
+        onTopUpRequestFormSubmit: onTopUpRequestFormSubmit, userid: userid);
   }
-}
-
-class _AddBalanceData {
-  String balance = "";
-  String image = "";
 }
 
 class AddBalanceState extends State<AddBalance> {
   final _formKey = GlobalKey<FormState>();
+  final Function onTopUpRequestFormSubmit;
+  final String userid;
+  
+  bool _isformEdit = false;
+  bool _isFileUploadValidationFailed = false;
+  double _balance;
+  File _image;
+
+  AddBalanceState({this.onTopUpRequestFormSubmit, this.userid});
+
+  Future getImage() async {
+    File image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      _image = image;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
     return Form(
       key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: ListView(
+        padding: EdgeInsets.all(20),
         children: <Widget>[
           TextFormField(
             keyboardType: TextInputType.number,
             validator: (value) {
-              return int.parse(value) < 10 ? "Please input price" : null;
+              try {
+                if (double.parse(value) < 10) throw "";
+                return null;
+              } catch (e) {
+                return "Please input price";
+              }
             },
             decoration: InputDecoration(hintText: "Price (min €10)"),
-            onSaved: (value) {},
+            onTap: (){
+              setState((){
+                _isformEdit = true;
+              });
+            },
+            onEditingComplete: (){
+              setState((){
+                _isformEdit = false;
+              });
+              FocusScope.of(context).requestFocus(new FocusNode());
+            },
+            onChanged: (value) {
+              _balance = double.parse(value);
+            },
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: RaisedButton(
-              onPressed: () {
-                // Validate returns true if the form is valid, or false
-                // otherwise.
-                if (_formKey.currentState.validate()) {
-                  // If the form is valid, display a Snackbar.
-                  Scaffold.of(context)
-                      .showSnackBar(SnackBar(content: Text('Processing Data')));
-                }
-              },
-              child: Text('Submit'),
+          Column(children: [
+            RaisedButton(
+              onPressed: _isformEdit==true?null:()=>getImage(),
+              child: Text('Input Receipt'),
             ),
+            Visibility(
+                visible: _isFileUploadValidationFailed,
+                maintainSize: false,
+                child: Text(
+                  "Please Input Receipt",
+                  style: TextStyle(color: Colors.redAccent),
+                )),
+            _image == null
+                ? new Container(
+                    height: 0,
+                  )
+                : Image.file(
+                    _image,
+                    height: 200,
+                    width: 300,
+                  ),
+          ]),
+          RaisedButton(
+            onPressed: _isformEdit==true?null:() {
+              // Validate returns true if the form is valid, or false
+              // otherwise.
+              if (_formKey.currentState.validate()) {
+                
+                //check Image Exist
+                if(_image == null){
+                  setState(() {
+                    _isFileUploadValidationFailed = true;
+                  });
+                  return;
+                }
+                _formKey.currentState.save();
+                this.onTopUpRequestFormSubmit(new TopUpRequestState(
+                    balance: _balance,
+                    approved: false,
+                    image: _image.path,
+                    completed: false,
+                    dateTime: DateTime.now(),
+                    userid: userid));
+                    Navigator.of(context).pop(); 
+              }
+            },
+            child: Text('Submit'),
           ),
         ],
       ),
@@ -193,17 +273,24 @@ class AddBalanceState extends State<AddBalance> {
 }
 
 class _ViewModel {
-  //final Function onPressAddMenu;
-  //final Function onPressMenuDetail;
+  final Function onTopUpRequestFormSubmit;
+  final String userid;
 
   final List<BalanceHistoryState> balanceHistory;
   final List<TopUpRequestState> topUpRequest;
 
-  _ViewModel({this.balanceHistory, this.topUpRequest});
+  _ViewModel(
+      {this.userid,
+      this.balanceHistory,
+      this.topUpRequest,
+      this.onTopUpRequestFormSubmit});
 
   static _ViewModel fromStore(Store<AppState> store) {
     return new _ViewModel(
+        userid: store.state.user.uid,
         balanceHistory: store.state.balanceHistory,
-        topUpRequest: store.state.topUpRequest);
+        topUpRequest: store.state.topUpRequest,
+        onTopUpRequestFormSubmit: (TopUpRequestState topUpRequestState) =>
+            {print(topUpRequestState.userid)});
   }
 }
