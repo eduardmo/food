@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:food/models/app_state.dart';
 import 'package:food/models/balance_history_state.dart';
 import 'package:food/models/topup_request_state.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_thunk/redux_thunk.dart';
-
+import 'package:path/path.dart' as Path;
 import '../models/app_state.dart';
+import 'dart:io';
 
 class RequestBalanceHistory {
   List<BalanceHistoryState> balanceHistory;
@@ -26,6 +28,8 @@ class RequestTopUpRequest {
     return 'RequestTopUpRequest{topUpRequest: $topUpRequest}';
   }
 }
+
+class SubmitTopUpRequest {}
 
 ThunkAction<AppState> retrieveBalance(String userid) {
   return (Store<AppState> store) async {
@@ -72,7 +76,7 @@ ThunkAction<AppState> retrieveTopUpRequest(String userid) {
           .then((QuerySnapshot query) async {
         return query.documents.map((DocumentSnapshot e) {
           double balance;
- 
+
           if (e.data["Balance"] is int) {
             int i = e.data["Balance"];
             balance = i.toDouble();
@@ -80,17 +84,54 @@ ThunkAction<AppState> retrieveTopUpRequest(String userid) {
             balance = e.data["Balance"];
 
           return new TopUpRequestState(
-            id: e.documentID,
-            balance: balance,
-            dateTime: e.data["DateTime"].toDate(),
-            approved: e.data["Approved"],
-            completed: e.data["Completed"],
-            userid: e.data["userid"].documentID,
-            image: e.data["Image"]
-          );
+              id: e.documentID,
+              balance: balance,
+              dateTime: e.data["DateTime"].toDate(),
+              approved: e.data["Approved"],
+              completed: e.data["Completed"],
+              userid: e.data["userid"].documentID,
+              image: e.data["Image"]);
         }).toList();
       }).catchError((error) => {print(error)});
       store.dispatch(RequestTopUpRequest(topUpRequest));
+    } catch (error) {
+      print(error);
+    }
+  };
+}
+
+ThunkAction<AppState> submitTopUpRequest(TopUpRequestState topUpRequestState) {
+  return (Store<AppState> store) async {
+    try {
+      //Save Image
+      StorageReference storageReference = FirebaseStorage.instance
+          .ref()
+          .child('receipt/${Path.basename(topUpRequestState.image)}}');
+      StorageUploadTask uploadTask =
+          storageReference.putFile(new File(topUpRequestState.image));
+      await uploadTask.onComplete;
+
+      print('File Uploaded');
+      String fileURL = await storageReference.getDownloadURL();
+
+      //Retrieve user reference
+      DocumentSnapshot user = await Firestore.instance
+          .collection("user")
+          .document(topUpRequestState.userid)
+          .get();
+
+      //Save Database
+      await Firestore.instance.collection("TopUpRequest").add({
+        "Approved": topUpRequestState.approved,
+        "Balance": topUpRequestState.balance,
+        "Completed": topUpRequestState.completed,
+        "DateTime": DateTime.now(),
+        "Image": fileURL,
+        "userid": user.reference
+      });
+
+      //re-retrieve top up request
+      store.dispatch(retrieveTopUpRequest(topUpRequestState.userid));
     } catch (error) {
       print(error);
     }

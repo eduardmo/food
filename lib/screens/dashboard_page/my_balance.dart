@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart'; // For Image Picker
 import 'package:food/models/app_state.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
+import 'package:food/actions/mybalance_action.dart';
 
 class MyBalance extends StatelessWidget {
   bool isAdmin = false;
@@ -169,7 +170,7 @@ class AddBalanceState extends State<AddBalance> {
   final _formKey = GlobalKey<FormState>();
   final Function onTopUpRequestFormSubmit;
   final String userid;
-  
+
   bool _isformEdit = false;
   bool _isFileUploadValidationFailed = false;
   double _balance;
@@ -203,13 +204,13 @@ class AddBalanceState extends State<AddBalance> {
               }
             },
             decoration: InputDecoration(hintText: "Price (min €10)"),
-            onTap: (){
-              setState((){
+            onTap: () {
+              setState(() {
                 _isformEdit = true;
               });
             },
-            onEditingComplete: (){
-              setState((){
+            onEditingComplete: () {
+              setState(() {
                 _isformEdit = false;
               });
               FocusScope.of(context).requestFocus(new FocusNode());
@@ -220,7 +221,7 @@ class AddBalanceState extends State<AddBalance> {
           ),
           Column(children: [
             RaisedButton(
-              onPressed: _isformEdit==true?null:()=>getImage(),
+              onPressed: _isformEdit == true ? null : () => getImage(),
               child: Text('Input Receipt'),
             ),
             Visibility(
@@ -241,29 +242,30 @@ class AddBalanceState extends State<AddBalance> {
                   ),
           ]),
           RaisedButton(
-            onPressed: _isformEdit==true?null:() {
-              // Validate returns true if the form is valid, or false
-              // otherwise.
-              if (_formKey.currentState.validate()) {
-                
-                //check Image Exist
-                if(_image == null){
-                  setState(() {
-                    _isFileUploadValidationFailed = true;
-                  });
-                  return;
-                }
-                _formKey.currentState.save();
-                this.onTopUpRequestFormSubmit(new TopUpRequestState(
-                    balance: _balance,
-                    approved: false,
-                    image: _image.path,
-                    completed: false,
-                    dateTime: DateTime.now(),
-                    userid: userid));
-                    Navigator.of(context).pop(); 
-              }
-            },
+            onPressed: _isformEdit == true
+                ? null
+                : () {
+                    // Validate returns true if the form is valid, or false
+                    // otherwise.
+                    if (_formKey.currentState.validate()) {
+                      //check Image Exist
+                      if (_image == null) {
+                        setState(() {
+                          _isFileUploadValidationFailed = true;
+                        });
+                        return;
+                      }
+                      _formKey.currentState.save();
+                      this.onTopUpRequestFormSubmit(new TopUpRequestState(
+                          balance: _balance,
+                          approved: false,
+                          image: _image.path,
+                          completed: false,
+                          dateTime: DateTime.now(),
+                          userid: userid));
+                      Navigator.of(context).pop();
+                    }
+                  },
             child: Text('Submit'),
           ),
         ],
@@ -291,6 +293,6 @@ class _ViewModel {
         balanceHistory: store.state.balanceHistory,
         topUpRequest: store.state.topUpRequest,
         onTopUpRequestFormSubmit: (TopUpRequestState topUpRequestState) =>
-            {print(topUpRequestState.userid)});
+            {store.dispatch(submitTopUpRequest(topUpRequestState))});
   }
 }
