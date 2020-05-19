@@ -10,11 +10,11 @@ import 'package:food/screens/cart_page.dart';
 import 'package:food/screens/category_list.dart';
 import 'package:food/screens/dashboard.dart';
 import 'package:food/screens/dashboard_page/my_balance.dart';
+import 'package:food/screens/dashboard_test.dart';
+import 'package:food/screens/login_screen_test.dart';
 import 'package:food/screens/product_page.dart';
 import 'package:food/store/store.dart';
 import 'package:food/screens/admin/MenuDetail_screen.dart';
-
-import 'screens/home_page.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,9 +52,9 @@ class FoodApp extends StatelessWidget {
 Route _getRoute(RouteSettings settings) {
     switch (settings.name) {
       case '/login':
-        return _buildRoute(settings, HomePage());
+        return _buildRoute(settings, LoginPage());
       case '/dashboard':
-        return _buildRoute(settings, Dashboard());
+        return _buildRoute(settings, DashboardTest());
       case '/dashboard/myBalance':
         return _buildRoute(settings, MyBalance());
       case '/categoryList':
@@ -70,7 +70,7 @@ Route _getRoute(RouteSettings settings) {
       case '/cart':
         return _buildRoute(settings, CartPage());
       default:
-       return  this.store.state.auth.loginSuccess ? _buildRoute(settings, Dashboard()) : _buildRoute(settings, HomePage());
+       return  this.store.state.auth.loginSuccess ? _buildRoute(settings, DashboardTest()) : _buildRoute(settings, LoginPage());
     }
 }
 

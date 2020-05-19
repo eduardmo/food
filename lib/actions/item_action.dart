@@ -7,6 +7,18 @@ import 'package:redux_thunk/redux_thunk.dart';
 import '../models/app_state.dart';
 import '../models/items_state.dart';
 
+class FilterItems {
+  final List<ItemState> items;
+  final String categoryId;
+  
+  FilterItems({this.items, this.categoryId});
+
+  @override
+  String toString() {
+    return 'FilterItems{categoryId: $categoryId}';
+  }
+}
+
 class RequestItems {
   final List<ItemState> items;
 

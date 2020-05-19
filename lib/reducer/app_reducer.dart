@@ -39,9 +39,17 @@ AppState appReducer(AppState state, action) {
       return state.copyWith(
           categories: categoriesReducer(state.categories, action));
 
+    case SetActiveCategory:
+      return state.copyWith(
+        categories: categoriesReducer(state.categories, action)
+      );
+
     //Any changes to the items will be here
     case RequestItems:
       return state.copyWith(items: itemsReducer(state.items, action));
+
+    case FilterItems:
+      return state.copyWith(filteredItems: itemsReducer(state.items, action));
 
     //When we change User, everything must go here
     case SetUserState:

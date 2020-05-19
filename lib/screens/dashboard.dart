@@ -263,7 +263,8 @@ Widget deals(String dealTitle, _ViewModel vm,
   );
 }
 
-class _ViewModel {  final Function(RefreshController _refreshController) onRefreshCallback;
+class _ViewModel { 
+   final Function(RefreshController _refreshController) onRefreshCallback;
   final Function(RefreshController _refreshController) onLoadingCallback;
   final Function() goToHomePage;
   final Function() goToCartPage;

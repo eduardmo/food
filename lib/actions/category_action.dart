@@ -14,6 +14,18 @@ class RequestCategories {
   }
 }
 
+class SetActiveCategory {
+  bool isActive;
+  String categoryId;
+
+  SetActiveCategory({this.isActive, this.categoryId});
+
+   @override
+  String toString() {
+    return 'SetActiveCategory';
+  }
+}
+
 ThunkAction<AppState> retrieveCategories = (Store<AppState> store) async {
   try {
     //Get all Categories

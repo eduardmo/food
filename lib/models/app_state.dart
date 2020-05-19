@@ -17,6 +17,7 @@ class AppState {
   final List<MenuState> menus;
   final List<CategoryState> categories;
   final List<ItemState> items;
+  final List<ItemState> filteredItems;
   final List<BalanceHistoryState> balanceHistory;
   final List<TopUpRequestState> topUpRequest;
 
@@ -26,6 +27,7 @@ class AppState {
     List<MenuState> menus,
     List<CategoryState> categories,
     List<ItemState> items,
+    List<ItemState> filteredItems,
     List<BalanceHistoryState> balanceHistory,
     List<TopUpRequestState> topUpRequest,
     CartState cartItems,
@@ -38,6 +40,7 @@ class AppState {
         items = items ?? new List<ItemState>(),
         cartItems = cartItems ?? new CartState(),
         balanceHistory = balanceHistory ?? new List<BalanceHistoryState>(),
+        filteredItems = filteredItems ?? new List<ItemState>(),
         topUpRequest = topUpRequest ?? new List<TopUpRequestState>();
 
   factory AppState.fromJson(Map<String, dynamic> json) => AppState(
@@ -64,6 +67,13 @@ class AppState {
         items: json['items'] == null
             ? null
             : (json['items'] as List)
+                .map((e) => e == null
+                    ? null
+                    : ItemState.fromJson(e as Map<String, dynamic>))
+                .toList(),
+        filteredItems: json['filteredItems'] == null
+            ? null
+            : (json['filteredItems'] as List)
                 .map((e) => e == null
                     ? null
                     : ItemState.fromJson(e as Map<String, dynamic>))
@@ -127,6 +137,13 @@ class AppState {
                   ? null
                   : new ItemState.fromJson(e as Map<String, dynamic>))
               .toList(),
+      filteredItems: json['filteredItems'] == null
+          ? null
+          : (json['filteredItems'] as List)
+              .map((e) => e == null
+                  ? null
+                  : new ItemState.fromJson(e as Map<String, dynamic>))
+              .toList(),
       cartItems: json['cartItems'] == null
           ? null
           : new CartState.fromJson(json['cartItems']),
@@ -139,6 +156,7 @@ class AppState {
         'menus': menus,
         'categories': categories,
         'items': items,
+        'filteredItems': filteredItems,
         'cartItems': cartItems,
         'topUpRequest': topUpRequest,
         'balanceHistory': balanceHistory
@@ -150,6 +168,7 @@ class AppState {
       UserState user,
       List<CategoryState> categories,
       List<ItemState> items,
+      List<ItemState> filteredItems,
       CartState cartItems,
       List<BalanceHistoryState> balanceHistory,
       List<TopUpRequestState> topUpRequest}) {
@@ -159,6 +178,7 @@ class AppState {
       menus: menus ?? this.menus,
       categories: categories ?? this.categories,
       items: items ?? this.items,
+      filteredItems: filteredItems ?? this.filteredItems,
       cartItems: cartItems ?? this.cartItems,
       balanceHistory: balanceHistory ?? this.balanceHistory,
       topUpRequest: topUpRequest ?? this.topUpRequest,
@@ -173,6 +193,7 @@ class AppState {
       menus: $menus,
       categories: $categories,
       items: $items,
+      filteredItems: $filteredItems,
       cartItems: $cartItems,
       balanceHistory: $balanceHistory,
       topUpRequest: $topUpRequest

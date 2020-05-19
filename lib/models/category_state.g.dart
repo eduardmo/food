@@ -12,6 +12,7 @@ CategoryState _$CategoryStateFromJson(Map<String, dynamic> json) {
     categoryName: json['categoryName'] as String,
     image: json['image'] as String,
     menuId: json['menuId'] as String,
+    isActive: json['isActive'] as bool,
   );
 }
 
@@ -21,4 +22,5 @@ Map<String, dynamic> _$CategoryStateToJson(CategoryState instance) =>
       'categoryName': instance.categoryName,
       'image': instance.image,
       'menuId': instance.menuId,
+      'isActive': instance.isActive,
     };
