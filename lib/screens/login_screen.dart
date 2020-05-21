@@ -5,16 +5,16 @@ import 'package:food/models/app_state.dart';
 import 'package:lite_rolling_switch/lite_rolling_switch.dart';
 import 'package:redux/redux.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginScreen extends StatefulWidget {
    final Widget child;
   final bool expand;
-  LoginPage({this.expand = false, this.child});
+  LoginScreen({this.expand = false, this.child});
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _LoginPageState extends State<LoginPage>  with SingleTickerProviderStateMixin {
+class _LoginScreenState extends State<LoginScreen>  with SingleTickerProviderStateMixin {
   AnimationController expandController;
   Animation<double> animation; 
   bool isOffice = false;

@@ -6,15 +6,11 @@ import 'package:food/middleware/middleware.dart';
 import 'package:food/models/app_state.dart';
 import 'package:food/screens/admin/AdminDashboard_screen.dart';
 import 'package:food/screens/admin/createmenu_screen.dart';
-import 'package:food/screens/cart_page.dart';
-import 'package:food/screens/category_list.dart';
 import 'package:food/screens/dashboard.dart';
 import 'package:food/screens/dashboard_page/my_balance.dart';
-import 'package:food/screens/dashboard_test.dart';
-import 'package:food/screens/login_screen_test.dart';
-import 'package:food/screens/product_page.dart';
 import 'package:food/store/store.dart';
 import 'package:food/screens/admin/MenuDetail_screen.dart';
+import 'screens/login_screen.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,25 +48,19 @@ class FoodApp extends StatelessWidget {
 Route _getRoute(RouteSettings settings) {
     switch (settings.name) {
       case '/login':
-        return _buildRoute(settings, LoginPage());
+        return _buildRoute(settings, LoginScreen());
       case '/dashboard':
-        return _buildRoute(settings, DashboardTest());
+        return _buildRoute(settings, Dashboard());
       case '/dashboard/myBalance':
         return _buildRoute(settings, MyBalance());
-      case '/categoryList':
-        return _buildRoute(settings, CategoryList(categoryId:settings.arguments));
-      case '/addItem':
-        return _buildRoute(settings, ProductPage("hallo"));
       case '/admin':
         return _buildRoute(settings, AdminDashboard());
       case '/admin/Menu/Add':
         return _buildRoute(settings, CreateMenu());
       case '/admin/Menu/Detail':
         return _buildRoute(settings, AdminMenuDetail(menuId:settings.arguments));
-      case '/cart':
-        return _buildRoute(settings, CartPage());
       default:
-       return  this.store.state.auth.loginSuccess ? _buildRoute(settings, DashboardTest()) : _buildRoute(settings, LoginPage());
+       return  this.store.state.auth.loginSuccess ? _buildRoute(settings, Dashboard()) : _buildRoute(settings, LoginScreen());
     }
 }
 
