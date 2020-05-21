@@ -256,6 +256,7 @@ class AddBalanceState extends State<AddBalance> {
                         return;
                       }
                       _formKey.currentState.save();
+                      print(_image.path);
                       this.onTopUpRequestFormSubmit(new TopUpRequestState(
                           balance: _balance,
                           approved: false,
