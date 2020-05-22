@@ -93,8 +93,7 @@ ThunkAction<AppState> createLogInMiddleware = (Store<AppState> store) async {
           name: userFirebase.displayName,
           email: userFirebase.email,
           uid: userFirebase.uid,
-          isAdmin: userSnapshot.data["isAdmin"],
-          adminMenus: null)));
+          isAdmin: userSnapshot.data["isAdmin"])));
     } else {
       //If not, add to our database
       await ref.document(userFirebase.uid).setData({
@@ -107,8 +106,7 @@ ThunkAction<AppState> createLogInMiddleware = (Store<AppState> store) async {
           name: userFirebase.displayName,
           email: userFirebase.email,
           uid: userFirebase.uid,
-          isAdmin: false,
-          adminMenus: null)));
+          isAdmin: false)));
     }
     
     //Retrieve data for all items

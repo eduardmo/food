@@ -14,10 +14,7 @@ import 'package:food/models/category_state.dart';
 import 'package:food/models/items_state.dart';
 import 'package:food/models/user_state.dart';
 import 'package:food/screens/admin/AdminDashboard_screen.dart';
-import 'package:food/screens/admin/MenuDetail_screen.dart';
 import 'package:food/screens/cart.dart';
-import 'package:food/screens/dashboard_page/dashboard_settings.dart';
-import 'package:food/screens/dashboard_page/my_balance.dart';
 import 'package:food/screens/order_page.dart';
 import 'package:nice_button/NiceButton.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -80,7 +77,7 @@ class _DashboardState extends State<Dashboard>
             buildBody(vm),
             CartOnePage(),
             OrderPage(),
-            MyBalance()
+            AdminDashboard()
           ];
           return Scaffold(
             body: Center(
@@ -171,8 +168,7 @@ class _DashboardState extends State<Dashboard>
                                   color: Colors.white,
                                   style: BorderStyle.solid,
                                   width: 2.0),
-                              image: DecorationImage(
-                                  image: AssetImage('assets/chris.jpg'))),
+                             ),
                         ),
                         SizedBox(
                             width: MediaQuery.of(context).size.width - 120.0),

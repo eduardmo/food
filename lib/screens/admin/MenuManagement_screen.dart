@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
-import 'package:food/actions/Admin/admin_action.dart';
+import 'package:food/actions/Admin/admin_menus_action.dart';
+import 'package:food/actions/Admin/admin_topuprequest_action.dart';
+import 'package:food/actions/Admin/admin_users_action.dart';
 import 'package:food/models/app_state.dart';
 import 'package:food/models/menu_state.dart';
 import 'package:redux/redux.dart';
@@ -24,7 +26,7 @@ class MenuManagement extends StatelessWidget {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text("Menu Management",
-                        style: Theme.of(context).textTheme.subtitle,
+                        style: Theme.of(context).textTheme.subtitle2,
                         textAlign: TextAlign.left),
                   ),
                   ListView(
@@ -43,7 +45,7 @@ class MenuManagement extends StatelessWidget {
                                           Text(e.name,
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .body1),
+                                                  .bodyText2),
                                           Row(
                                             children: <Widget>[
                                               Text(e.email,
@@ -84,13 +86,21 @@ class _ViewModel {
   _ViewModel({this.menus, this.onPressAddMenu, this.onPressMenuDetail});
 
   static _ViewModel fromStore(Store<AppState> store) {
-    if (store.state.user.adminMenus == null) {
+    if (store.state.adminState.menus == null) {
       store.dispatch(retrieveAdminMenus);
       return new _ViewModel(menus: new List<MenuState>());
     }
 
+    if(store.state.adminState.users == null){
+      store.dispatch(retrieveAdminUsers);
+    }
+
+    if(store.state.adminState.topUpRequestStates == null){
+      store.dispatch(retrieveAdminTopUpRequest());
+    }
+
     return new _ViewModel(
-        menus: store.state.user.adminMenus,
+        menus: store.state.adminState.menus,
         onPressAddMenu: () {
           store.dispatch(NavigateToAction.push("/admin/Menu/Add" ));
         },

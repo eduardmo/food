@@ -11,7 +11,7 @@ class CategoryState {
   final String image;
   final String menuId;
   @JsonKey(nullable: true, includeIfNull: true)
- bool isActive;
+  final bool isActive;
 
   CategoryState({this.id, this.categoryName, this.image, this.menuId, this.isActive});
 

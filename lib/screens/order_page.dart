@@ -102,7 +102,7 @@ class OrderPage extends StatelessWidget {
                         ),
                         Text(
                           "Top up",
-                          style: Theme.of(context).textTheme.title,
+                          style: Theme.of(context).textTheme.headline6,
                         ),
                         SizedBox(height: 10.0),
                         Flexible(
@@ -280,7 +280,7 @@ class OrderPage extends StatelessWidget {
         children: <Widget>[
           Text(
             "$firstText",
-            style: Theme.of(context).textTheme.title,
+            style: Theme.of(context).textTheme.headline6,
           ),
           FlatButton(
             onPressed: () {},
@@ -331,7 +331,7 @@ class OrderPage extends StatelessWidget {
                       child: Text("{vm.oders}",
                           style: Theme.of(context)
                               .textTheme
-                              .subhead
+                              .subtitle1
                               .merge(TextStyle(color: Colors.grey.shade600))),
                     )
                   ],
@@ -363,7 +363,7 @@ class OrderPage extends StatelessWidget {
                   ),
                   Text(
                     "${vm.userState.name}",
-                    style: Theme.of(context).textTheme.title,
+                    style: Theme.of(context).textTheme.headline6,
                   ),
                   SizedBox(
                     height: 5.0,

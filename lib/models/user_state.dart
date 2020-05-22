@@ -1,7 +1,4 @@
-import 'package:food/models/cart_state.dart';
-import 'package:food/models/menu_state.dart';
 import 'package:json_annotation/json_annotation.dart';
-
 part 'user_state.g.dart';
 
 @JsonSerializable(nullable: false)
@@ -10,10 +7,8 @@ class UserState {
   final String email;
   final String uid;
   final bool isAdmin;
-  @JsonKey(nullable: true)
-  final List<MenuState> adminMenus;
 
-  UserState({this.name, this.email, this.uid, this.isAdmin, this.adminMenus});
+  UserState({this.name, this.email, this.uid, this.isAdmin});
 
   Map<String, dynamic> toJson() => _$UserStateToJson(this);
 
@@ -25,19 +20,17 @@ class UserState {
       final String email,
       final String uid,
       final bool isAdmin,
-      final List<MenuState> adminMenus,
      }) {
     return new UserState(
         name: name ?? this.name,
         email: email ?? this.email,
         uid: uid ?? this.uid,
-        isAdmin: isAdmin ?? this.isAdmin,
-        adminMenus: adminMenus ?? this.adminMenus,
+        isAdmin: isAdmin ?? this.isAdmin
        );
   }
 
   @override
   String toString() {
-    return "{name: $name, email: $email, uid: $uid,isAdmin:$isAdmin,adminMenus:$adminMenus}";
+    return "{name: $name, email: $email, uid: $uid,isAdmin:$isAdmin}";
   }
 }

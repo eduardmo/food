@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:food/models/admin_state.dart';
 import 'package:food/models/balance_history_state.dart';
 import 'package:food/models/cart_state.dart';
 import 'package:food/models/category_state.dart';
@@ -20,8 +21,8 @@ class AppState {
   final List<ItemState> filteredItems;
   final List<BalanceHistoryState> balanceHistory;
   final List<TopUpRequestState> topUpRequest;
-
   final CartState cartItems;
+  final AdminState adminState;
 
   AppState({
     List<MenuState> menus,
@@ -33,6 +34,7 @@ class AppState {
     CartState cartItems,
     AuthState auth,
     UserState user,
+    AdminState adminState
   })  : auth = auth ?? new AuthState(),
         user = user ?? new UserState(),
         menus = menus ?? new List<MenuState>(),
@@ -41,7 +43,9 @@ class AppState {
         cartItems = cartItems ?? new CartState(),
         balanceHistory = balanceHistory ?? new List<BalanceHistoryState>(),
         filteredItems = filteredItems ?? new List<ItemState>(),
-        topUpRequest = topUpRequest ?? new List<TopUpRequestState>();
+        topUpRequest = topUpRequest ?? new List<TopUpRequestState>(),
+        adminState = adminState ?? new AdminState()
+        ;
 
   factory AppState.fromJson(Map<String, dynamic> json) => AppState(
         auth: json['auth'] == null
@@ -171,7 +175,8 @@ class AppState {
       List<ItemState> filteredItems,
       CartState cartItems,
       List<BalanceHistoryState> balanceHistory,
-      List<TopUpRequestState> topUpRequest}) {
+      List<TopUpRequestState> topUpRequest,
+      AdminState adminState}) {
     return new AppState(
       auth: auth ?? this.auth,
       user: user ?? this.user,
@@ -182,6 +187,7 @@ class AppState {
       cartItems: cartItems ?? this.cartItems,
       balanceHistory: balanceHistory ?? this.balanceHistory,
       topUpRequest: topUpRequest ?? this.topUpRequest,
+      adminState: adminState ?? this.adminState
     );
   }
 
@@ -196,7 +202,7 @@ class AppState {
       filteredItems: $filteredItems,
       cartItems: $cartItems,
       balanceHistory: $balanceHistory,
-      topUpRequest: $topUpRequest
+      topUpRequest: $topUpRequest,
     }''';
   }
 }

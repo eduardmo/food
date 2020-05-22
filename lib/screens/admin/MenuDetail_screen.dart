@@ -32,13 +32,13 @@ class AdminMenuDetail extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(vm.menu.name,
-                          style: Theme.of(context).textTheme.title),
+                          style: Theme.of(context).textTheme.bodyText2),
                       Text(vm.menu.phone,
-                          style: Theme.of(context).textTheme.body1),
+                          style: Theme.of(context).textTheme.bodyText2),
                       Text(vm.menu.address,
-                          style: Theme.of(context).textTheme.body1),
+                          style: Theme.of(context).textTheme.bodyText2),
                       Text(vm.menu.email,
-                          style: Theme.of(context).textTheme.body1)
+                          style: Theme.of(context).textTheme.bodyText2)
                     ],
                   ),
                   Expanded(

@@ -10,10 +10,7 @@ import 'package:redux/redux.dart';
 import 'package:food/actions/mybalance_action.dart';
 
 class MyBalance extends StatelessWidget {
-  bool isAdmin = false;
-  Function onAdminButtonClicked;
-  Function onUserProfileClicked;
-  Function onLogoutClicked;
+  final bool isAdmin = false;
 
   @override
   Widget build(BuildContext context) {
@@ -140,7 +137,7 @@ Function generateAddBalanceFABDialog(BuildContext context, _ViewModel vm) {
                       Padding(
                           padding: EdgeInsets.all(8.0),
                           child: Text("Add Balance Request",
-                              style: Theme.of(context).textTheme.headline)),
+                              style: Theme.of(context).textTheme.headline5)),
                       Container(
                           height: 400,
                           child: AddBalance(
@@ -256,7 +253,6 @@ class AddBalanceState extends State<AddBalance> {
                         return;
                       }
                       _formKey.currentState.save();
-                      print(_image.path);
                       this.onTopUpRequestFormSubmit(new TopUpRequestState(
                           balance: _balance,
                           approved: false,

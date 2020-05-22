@@ -8,8 +8,9 @@ import 'package:food/screens/admin/AdminDashboard_screen.dart';
 import 'package:food/screens/admin/createmenu_screen.dart';
 import 'package:food/screens/dashboard.dart';
 import 'package:food/screens/dashboard_page/my_balance.dart';
-import 'package:food/store/store.dart';
 import 'package:food/screens/admin/MenuDetail_screen.dart';
+import 'package:food/store/store.dart';
+import 'package:redux/redux.dart';
 import 'screens/login_screen.dart';
 
 void main() async{
@@ -22,17 +23,15 @@ void main() async{
   flipperClient.start();
 
   final initialState = await persistor.load();
-  runApp(FoodApp(initialState));
+  Store<AppState> store = createStore(initialState);
+  runApp(FoodApp(store:store, initialState:initialState));
 }
 
 class FoodApp extends StatelessWidget {
-  var store;
-  var initialState;
+  final Store<AppState> store;
+  final AppState initialState;
     
-  FoodApp(initialState) {
-    this.store = createStore(initialState);
-  }
-
+  FoodApp({this.store, this.initialState});
   @override
   Widget build(BuildContext context) {
     return new StoreProvider<AppState>(

@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:food/screens/admin/ManageBalanceRequest_screen.dart';
 import 'package:food/screens/admin/MenuManagement_screen.dart';
 import 'package:food/styles/colors.dart';
-
 
 class AdminDashboard extends StatefulWidget {
   final String pageTitle;
@@ -13,7 +13,6 @@ class AdminDashboard extends StatefulWidget {
   _AdminDashboardState createState() => _AdminDashboardState();
 }
 
-
 class _AdminDashboardState extends State<AdminDashboard> {
   int _selectedIndex = 0;
 
@@ -22,14 +21,13 @@ class _AdminDashboardState extends State<AdminDashboard> {
     final _tabs = [
       MenuManagement(),
       Text("Orders"),
-      Text("UserBalance")
+      ManageBalanceRequest()
     ];
 
     return Scaffold(
         appBar: AppBar(
           title: const Text('Fryo Admin'),
           backgroundColor: primaryColor,
-
         ),
         body: Center(
           child: _tabs[_selectedIndex],

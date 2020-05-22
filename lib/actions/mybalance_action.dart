@@ -68,9 +68,14 @@ ThunkAction<AppState> retrieveBalance(String userid) {
 ThunkAction<AppState> retrieveTopUpRequest(String userid) {
   return (Store<AppState> store) async {
     try {
+
+      //Get documentReference
+      DocumentSnapshot userReference =  await Firestore.instance.collection("user").document(userid).get();
+
       //Get user balance
       List<TopUpRequestState> topUpRequest = await Firestore.instance
           .collection("TopUpRequest")
+          .where("userid",isEqualTo: userReference.reference)
           .orderBy("DateTime")
           .getDocuments()
           .then((QuerySnapshot query) async {

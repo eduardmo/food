@@ -15,9 +15,9 @@ List<CategoryState> categoryRequestReducer(List<CategoryState> categoryState, Re
 
 List<CategoryState> setActiveCategory(List<CategoryState> categoryState, SetActiveCategory action) {
   categoryState.forEach((element) { 
-    element.isActive = false;
+      element.copyWith(isActive:false);
     if(element.id == action.categoryId) {
-    element.isActive = true;
+      element.copyWith(isActive:true);
   }});
   return categoryState;
 }

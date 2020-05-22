@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:food/actions/Admin/admin_action.dart';
+import 'package:food/actions/Admin/admin_menus_action.dart';
 import 'package:food/models/app_state.dart';
 import 'package:food/models/menu_state.dart';
 import 'package:food/styles/colors.dart';

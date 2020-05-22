@@ -7,6 +7,5 @@ Reducer<List<TopUpRequestState>> topUpReducer = combineReducers([
 ]);
 
 List<TopUpRequestState> requestTopUpRequestReducer(List<TopUpRequestState> balanceHistory, RequestTopUpRequest action) {
-  print("Masuk sini");
   return action.topUpRequest;
 }

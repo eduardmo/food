@@ -1,4 +1,6 @@
-import 'package:food/actions/Admin/admin_action.dart';
+import 'package:food/actions/Admin/admin_menus_action.dart';
+import 'package:food/actions/Admin/admin_topuprequest_action.dart';
+import 'package:food/actions/Admin/admin_users_action.dart';
 import 'package:food/actions/auth_action.dart';
 import 'package:food/actions/cart_action.dart';
 import 'package:food/actions/mybalance_action.dart';
@@ -8,10 +10,10 @@ import 'package:food/actions/category_action.dart';
 import 'package:food/actions/item_action.dart';
 
 import 'package:food/models/app_state.dart';
+import 'package:food/reducer/admin/admin_reducer.dart';
 import 'package:food/reducer/balance_history_reducer.dart';
 import 'package:food/reducer/cart_reducer.dart';
 import 'package:food/reducer/topup_reducer.dart';
-import 'package:food/reducer/user_reducer.dart';
 import 'package:food/reducer/category_reducer.dart';
 import 'package:food/reducer/item_reducer.dart';
 
@@ -53,8 +55,6 @@ AppState appReducer(AppState state, action) {
 
     //When we change User, everything must go here
     case SetUserState:
-    case RequestAdminMenu:
-      return state.copyWith(user: userReducer(state.user, action));
 
     // Logic for the CartState related stuff
     case RequestCartState:
@@ -78,6 +78,13 @@ AppState appReducer(AppState state, action) {
     case RequestTopUpRequest:
       return state.copyWith(
           topUpRequest: topUpReducer(state.topUpRequest, action));
+
+    //Logic for admin
+      case RequestAdminMenu:
+      case RequestAdminUsers:
+      case RequestAdminTopUpRequest:
+        return state.copyWith(adminState: adminReducer(state.adminState, action));
   }
+
   return state;
 }

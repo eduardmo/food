@@ -1,7 +1,5 @@
 import 'package:food/actions/cart_action.dart';
-import 'package:food/actions/user_action.dart';
 import 'package:food/models/cart_state.dart';
-import 'package:food/models/items_state.dart';
 import 'package:redux/redux.dart';
 
 Reducer<CartState> cartReducer = combineReducers([

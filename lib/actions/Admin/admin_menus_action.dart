@@ -16,45 +16,6 @@ class RequestAdminMenu {
   }
 }
 
-ThunkAction<AppState> retrieveAdminMenuDetail(MenuState menu) {
-  return (Store<AppState> store) async {
-    try {
-     DocumentReference itemsReference = await Firestore.instance
-          .collection("Menu")
-          .document(menu.id)
-          .get()
-          .then((DocumentSnapshot query) async {
-        return query["Items"];
-      }).catchError((error) {
-        print(error);
-      });
-
-      // List<ItemState> items = await itemsReference.get()
-      //         .then((DocumentSnapshot query) async{
-      //             print(query)
-
-      //         })
-      //         .catchError((error){print(error);});
-              //       Iterator<DocumentSnapshot> menusIterator = menusDocumentSnapshot.iterator;
-//       List<MenuState> menus = new List();
-//       while (menusIterator.moveNext()) {
-//         menus.add(new MenuState(
-//             id: menusIterator.current['DocumentId'],
-//             Name: menusIterator.current['Name'],
-//             Address: menusIterator.current['Address'],
-//             Email: menusIterator.current['Email'],
-//             Phone: menusIterator.current['Phone'],
-//             isActive: menusIterator.current['isActive'],
-//             item: menusIterator.current['item']));
-//       }
-
-//       store.dispatch(new RequestAdminMenu(menus));
-    } catch (error) {
-      print(error);
-    }
-  };
-}
-
 ThunkAction<AppState> retrieveAdminMenus = (Store<AppState> store) async {
   try {
     List<DocumentSnapshot> menusDocumentSnapshot = await Firestore.instance
