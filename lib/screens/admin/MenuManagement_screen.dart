@@ -17,6 +17,11 @@ class MenuManagement extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new StoreConnector<AppState, _ViewModel>(
+        onInit: (store) {
+          store.dispatch(retrieveAdminUsers);
+          store.dispatch(retrieveAdminTopUpRequest());
+          store.dispatch(retrieveAdminMenus);
+        },
         converter: _ViewModel.fromStore,
         builder: (BuildContext context, _ViewModel vm) {
           return Scaffold(
@@ -35,7 +40,9 @@ class MenuManagement extends StatelessWidget {
                       children: vm.menus.map((MenuState e) {
                         return Card(
                             child: InkWell(
-                              onTap: (){vm.onPressMenuDetail(e.id);},
+                                onTap: () {
+                                  vm.onPressMenuDetail(e.id);
+                                },
                                 child: Padding(
                                     padding: const EdgeInsets.all(10.0),
                                     child: Column(
@@ -80,32 +87,21 @@ class MenuManagement extends StatelessWidget {
 class _ViewModel {
   final Function onPressAddMenu;
   final Function onPressMenuDetail;
-
   final List<MenuState> menus;
 
   _ViewModel({this.menus, this.onPressAddMenu, this.onPressMenuDetail});
 
   static _ViewModel fromStore(Store<AppState> store) {
-    if (store.state.adminState.menus == null) {
-      store.dispatch(retrieveAdminMenus);
-      return new _ViewModel(menus: new List<MenuState>());
-    }
-
-    if(store.state.adminState.users == null){
-      store.dispatch(retrieveAdminUsers);
-    }
-
-    if(store.state.adminState.topUpRequestStates == null){
-      store.dispatch(retrieveAdminTopUpRequest());
-    }
-
     return new _ViewModel(
-        menus: store.state.adminState.menus,
+        menus: ((){
+          return store.state.adminState.menus ?? List<MenuState>();
+        })(),
         onPressAddMenu: () {
-          store.dispatch(NavigateToAction.push("/admin/Menu/Add" ));
+          store.dispatch(NavigateToAction.push("/admin/Menu/Add"));
         },
         onPressMenuDetail: (String menuid) {
-          store.dispatch(NavigateToAction.push("/admin/Menu/Detail",arguments: menuid));
+          store.dispatch(
+              NavigateToAction.push("/admin/Menu/Detail", arguments: menuid));
         });
   }
 }

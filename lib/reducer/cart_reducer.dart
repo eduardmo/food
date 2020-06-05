@@ -1,39 +1,23 @@
 import 'package:food/actions/cart_action.dart';
-import 'package:food/models/cart_state.dart';
+import 'package:food/models/items_state.dart';
 import 'package:redux/redux.dart';
 
-Reducer<CartState> cartReducer = combineReducers([
-  new TypedReducer<CartState, RequestCartState>(requestCartState),
-  new TypedReducer<CartState, AddToCart>(addToCart),
-  new TypedReducer<CartState, EmptyCart>(emptyCart),
-  new TypedReducer<CartState, DeleteItem>(deleteItem),
-  new TypedReducer<CartState, CreateOrder>(createOrder),
+Reducer<List<ItemState>> cartReducer = combineReducers([
+  new TypedReducer<List<ItemState>, AddToCart>(addToCart),
+  new TypedReducer<List<ItemState>, EmptyCart>(emptyCart),
+  new TypedReducer<List<ItemState>, DeleteItem>(deleteItem),
 ]);
 
-
-CartState requestCartState(CartState cartState, RequestCartState action) {
-  return cartState.copyWith(itemState:  List.from(cartState.itemState));
+List<ItemState> addToCart(List<ItemState> cart, AddToCart action) {
+  cart.add(action.order);
+  return cart;
 }
 
-CartState addToCart(CartState cartState, AddToCart action) {
-  if(cartState.itemState == null) {
-    return CartState().copyWith(itemState: List()..add(action.itemState));
-  } else {
-    return CartState().copyWith(itemState: List.from(cartState.itemState)..add(action.itemState));
-  }
+List<ItemState> emptyCart(List<ItemState> cart, EmptyCart action) {
+  return List();
 }
 
-CartState emptyCart(CartState cartState, EmptyCart action) {
-  return CartState().copyWith(itemState: List());
-}
-
-CartState deleteItem(CartState cartState, DeleteItem action) {
-  return CartState().copyWith(itemState: List.from(cartState.itemState)..remove(action.itemState));
-}
-CartState createOrder(CartState userState, CreateOrder action) {
-  //When creating an order, empty the items in the cart
- return CartState().copyWith(
-   order: action.order,
-   itemState: List()
- );
+List<ItemState> deleteItem(List<ItemState> cart, DeleteItem action) {
+  cart.remove(action.cartItem);
+  return cart;
 }

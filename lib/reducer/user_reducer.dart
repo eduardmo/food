@@ -11,5 +11,6 @@ UserState setUserState(UserState user, SetUserState action) {
       name: action.userState.name,
       email: action.userState.email,
       isAdmin: action.userState.isAdmin,
+      balance: action.userState.balance,
       uid: action.userState.uid);
 }

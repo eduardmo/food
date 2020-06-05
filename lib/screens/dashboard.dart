@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:food/actions/auth_action.dart';
 import 'package:food/actions/cart_action.dart';
 import 'package:food/actions/category_action.dart';
@@ -56,14 +57,12 @@ class _DashboardState extends State<Dashboard>
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     controller = new TabController(length: 4, vsync: this);
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     controller.dispose();
     super.dispose();
   }
@@ -71,6 +70,7 @@ class _DashboardState extends State<Dashboard>
   @override
   Widget build(BuildContext context) {
     return new StoreConnector<AppState, _ViewModel>(
+        
         converter: _ViewModel.fromStore,
         builder: (BuildContext context, _ViewModel vm) {
           final _tabs = [
@@ -163,12 +163,12 @@ class _DashboardState extends State<Dashboard>
                           height: 50.0,
                           width: 50.0,
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(25.0),
-                              border: Border.all(
-                                  color: Colors.white,
-                                  style: BorderStyle.solid,
-                                  width: 2.0),
-                             ),
+                            borderRadius: BorderRadius.circular(25.0),
+                            border: Border.all(
+                                color: Colors.white,
+                                style: BorderStyle.solid,
+                                width: 2.0),
+                          ),
                         ),
                         SizedBox(
                             width: MediaQuery.of(context).size.width - 120.0),
@@ -351,7 +351,6 @@ class _DashboardState extends State<Dashboard>
                             style: TextStyle(
                                 fontSize: 13, fontWeight: FontWeight.w700),
                           ),
-                        
                           Text("${vm.filteredItems[index].price}€",
                               style: TextStyle(
                                 color: Colors.red,
@@ -365,7 +364,12 @@ class _DashboardState extends State<Dashboard>
                             text: "Add To Cart",
                             background: Colors.blueGrey,
                             onPressed: () {
-                              vm.goToAddItem(vm.filteredItems[index].name, vm.filteredItems[index].image, vm.filteredItems[index].price, vm.filteredItems[index].id, vm.filteredItems[index].menuId);
+                              vm.goToAddItem(
+                                  vm.filteredItems[index].name,
+                                  vm.filteredItems[index].image,
+                                  vm.filteredItems[index].price,
+                                  vm.filteredItems[index].id,
+                                  vm.filteredItems[index].menuId);
                             },
                           ),
                         ],
@@ -402,16 +406,12 @@ class _ViewModel {
       goToAddItem;
   final Function() goToHomePage;
   final Function() goToCartPage;
-
   final List<ItemState> filteredItems;
   final List<ItemState> items;
   final List<CategoryState> categories;
-
   final UserState user;
-
   final Function(String categoryId, List<ItemState> items) onListCategoryItems;
 
-  final List<ItemState> order;
   _ViewModel(
       {this.onRefreshCallback(RefreshController _refreshController),
       this.onLoadingCallback(RefreshController _refreshController),
@@ -421,16 +421,12 @@ class _ViewModel {
       this.onListCategoryItems,
       this.goToCartPage,
       this.goToHomePage,
-      this.order,
       this.filteredItems,
       this.goToAddItem});
 
   static _ViewModel fromStore(Store<AppState> store) {
     return new _ViewModel(
       user: store.state.user,
-      order: store.state.cartItems.order == null
-          ? List()
-          : store.state.cartItems.order,
       //Only Retrieve active Categories
       categories: store.state.categories.where((e) {
         return e.menuId ==
@@ -438,6 +434,12 @@ class _ViewModel {
       }).toList(),
 
       goToAddItem: (title, image, price, id, menuId) async {
+            Fluttertoast.showToast(
+              msg: "Item added to cart",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+            );
+
         store.dispatch(
             AddToCart(new ItemState(name: title, price: price, image: image)));
       },

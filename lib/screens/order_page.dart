@@ -1,25 +1,29 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:food/actions/cart_action.dart';
+import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
 import 'package:food/actions/mybalance_action.dart';
-import 'package:food/containers/network_image.dart';
+import 'package:food/actions/order_history_action.dart';
 import 'package:food/models/app_state.dart';
-import 'package:food/models/balance_history_state.dart';
+import 'package:food/models/order_history_header_state.dart';
 import 'package:food/models/topup_request_state.dart';
 import 'package:food/models/user_state.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:redux/redux.dart';
 
 class OrderPage extends StatelessWidget {
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
-  
+
   @override
   Widget build(BuildContext context) {
     return new StoreConnector<AppState, _ViewModel>(
+        onInit: (store) {
+          store.dispatch(retrieveTopUpRequest(store.state.user.uid));
+          store.dispatch(retrieveOrderHistoryHeaders());
+        },
         converter: _ViewModel.fromStore,
         builder: (BuildContext context, _ViewModel vm) {
           return Scaffold(
@@ -41,12 +45,16 @@ class OrderPage extends StatelessWidget {
                     if (index == 0) return _buildHeader(context, vm);
                     if (index == 1)
                       return _buildSectionHeader(
-                          "Order History", "See all history", context, vm);
+                          "Order History", "See all history", context, vm, () {
+                        vm.goToOrderHistory();
+                      });
                     if (index == 2) return _buildCollectionsRow(vm, index);
                     if (index == 3)
                       return _buildSectionHeader(
-                          "Top up history", "See all history", context, vm);
-                     return _buildListItem(index, vm);
+                          "Top up history", "See all history", context, vm, () {
+                        vm.goToBalanceHistory();
+                      });
+                    return _buildListItem(index, vm);
                   },
                 ),
               ],
@@ -65,7 +73,7 @@ class OrderPage extends StatelessWidget {
         });
   }
 
-  Widget buildTopUpDialog(BuildContext context, _ViewModel vm) {
+  void buildTopUpDialog(BuildContext context, _ViewModel vm) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -234,8 +242,19 @@ class OrderPage extends StatelessWidget {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20.0)),
               elevation: 5.0,
-              color: vm.topUpRequest.reversed.toList()[index-4].approved == true && vm.topUpRequest.reversed.toList()[index-4].completed == true ? Colors.green.shade100 
-              : (vm.topUpRequest.reversed.toList()[index-4].approved == false && vm.topUpRequest.reversed.toList()[index-4].completed == true ? Colors.red.shade100 : Colors.yellow.shade100 ) ,
+              color: vm.topUpRequest.reversed.toList()[index - 4].approved ==
+                          true &&
+                      vm.topUpRequest.reversed.toList()[index - 4].completed ==
+                          true
+                  ? Colors.green.shade100
+                  : (vm.topUpRequest.reversed.toList()[index - 4].approved ==
+                              false &&
+                          vm.topUpRequest.reversed
+                                  .toList()[index - 4]
+                                  .completed ==
+                              true
+                      ? Colors.red.shade100
+                      : Colors.yellow.shade100),
               child: ListTile(
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
@@ -248,7 +267,7 @@ class OrderPage extends StatelessWidget {
                     child: Icon(Icons.attach_money, color: Colors.black),
                   ),
                   title: Text(
-                    "You topped up with: ${vm.topUpRequest.reversed.toList()[index-4].balance}€",
+                    "You topped up with: ${vm.topUpRequest.reversed.toList()[index - 4].balance}€",
                     style: TextStyle(
                         color: Colors.black, fontWeight: FontWeight.bold),
                   ),
@@ -256,9 +275,9 @@ class OrderPage extends StatelessWidget {
 
                   subtitle: Row(
                     children: <Widget>[
-                      Text("${vm.topUpRequest.reversed.toList()[index-4].dateTime}",
-                          style: TextStyle(color: Colors.black)
-                          )
+                      Text(
+                          "${vm.topUpRequest.reversed.toList()[index - 4].dateTime}",
+                          style: TextStyle(color: Colors.black))
                     ],
                   ),
                   trailing: Icon(Icons.keyboard_arrow_right,
@@ -271,7 +290,7 @@ class OrderPage extends StatelessWidget {
   }
 
   Container _buildSectionHeader(String firstText, String secondsText,
-      BuildContext context, _ViewModel vm) {
+      BuildContext context, _ViewModel vm, Function onPress) {
     return Container(
       color: Colors.white,
       padding: EdgeInsets.symmetric(horizontal: 20.0),
@@ -283,7 +302,7 @@ class OrderPage extends StatelessWidget {
             style: Theme.of(context).textTheme.headline6,
           ),
           FlatButton(
-            onPressed: () {},
+            onPressed: onPress,
             child: Text(
               "$secondsText",
               style: TextStyle(color: Colors.blue),
@@ -302,7 +321,7 @@ class OrderPage extends StatelessWidget {
       child: ListView.builder(
         physics: BouncingScrollPhysics(),
         scrollDirection: Axis.horizontal,
-        itemCount: 3,
+        itemCount: vm.orderCount,
         itemBuilder: (BuildContext context, int index) {
           return Container(
             margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
@@ -318,22 +337,30 @@ class OrderPage extends StatelessWidget {
                   children: <Widget>[
                     Expanded(
                         child: ClipRRect(
-                            borderRadius: BorderRadius.circular(5.0),
-                            child:
-                                PNetworkImage("vm.oders", fit: BoxFit.cover))),
-                    SizedBox(
-                      height: 5.0,
-                    ),
+                            borderRadius: BorderRadius.circular(5.0))),
                     GestureDetector(
-                      onTap: () {
-                        vm.oders();
-                      },
-                      child: Text("{vm.oders}",
-                          style: Theme.of(context)
-                              .textTheme
-                              .subtitle1
-                              .merge(TextStyle(color: Colors.grey.shade600))),
-                    )
+                        child: Column(children: [
+                      Row(children: [
+                        Text("Date :"),
+                        Text(
+                            DateFormat('yyyy-MM-dd').format(
+                                vm.orderHistoryHeaderState[index].orderdate),
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle1
+                                .merge(TextStyle(color: Colors.grey.shade600)))
+                      ]),
+                      Row(children: [
+                        Text("Total Price :"),
+                        Text(
+                            vm.orderHistoryHeaderState[index].totalprice
+                                .toString(),
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle1
+                                .merge(TextStyle(color: Colors.grey.shade600)))
+                      ]),
+                    ]))
                   ],
                 )),
           );
@@ -376,7 +403,7 @@ class OrderPage extends StatelessWidget {
                         Expanded(
                           child: ListTile(
                             title: Text(
-                              "302",
+                              vm.orderHistoryHeaderState.length.toString(),
                               textAlign: TextAlign.center,
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
@@ -388,23 +415,11 @@ class OrderPage extends StatelessWidget {
                         Expanded(
                           child: ListTile(
                             title: Text(
-                              "10.3K",
+                              "€ " + vm.userState.balance.toString(),
                               textAlign: TextAlign.center,
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            subtitle: Text("Amount available".toUpperCase(),
-                                textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 12.0)),
-                          ),
-                        ),
-                        Expanded(
-                          child: ListTile(
-                            title: Text(
-                              "120",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            subtitle: Text("Something else?".toUpperCase(),
+                            subtitle: Text("Your Balance".toUpperCase(),
                                 textAlign: TextAlign.center,
                                 style: TextStyle(fontSize: 12.0)),
                           ),
@@ -424,7 +439,7 @@ class OrderPage extends StatelessWidget {
                 shape: CircleBorder(),
                 child: CircleAvatar(
                   radius: 40.0,
-                  backgroundImage: CachedNetworkImageProvider("avatars[0]"),
+                  //backgroundImage: CachedNetworkImageProvider("avatars[0]"),
                 ),
               ),
             ],
@@ -437,31 +452,42 @@ class OrderPage extends StatelessWidget {
 
 class _ViewModel {
   final Function onTopUpRequestFormSubmit;
-  final Function oders;
-
-  final List<BalanceHistoryState> balanceHistory;
+  final Function goToOrderHistory;
+  final Function goToBalanceHistory;
   final UserState userState;
   final List<TopUpRequestState> topUpRequest;
-
-  _ViewModel({
-    this.balanceHistory,
-    this.onTopUpRequestFormSubmit,
-    this.topUpRequest,
-    this.oders,
-    this.userState,
-  });
+  final List<OrderHistoryHeaderState> orderHistoryHeaderState;
+  final int orderCount;
+  _ViewModel(
+      {this.onTopUpRequestFormSubmit,
+      this.topUpRequest,
+      this.userState,
+      this.goToOrderHistory,
+      this.goToBalanceHistory,
+      this.orderCount,
+      this.orderHistoryHeaderState});
 
   static _ViewModel fromStore(Store<AppState> store) {
     return new _ViewModel(
-      userState: store.state.user,
-      oders: () async {
-        await store.dispatch(retieveOrderMiddleware);
+      goToOrderHistory: () {
+        store.dispatch(NavigateToAction.push('/orderhistory'));
       },
+      goToBalanceHistory: () {
+          store.dispatch(NavigateToAction.push('/dashboard/myBalance'));
+      },
+      orderCount: store.state.orderHistoryHeaderState.length,
+      orderHistoryHeaderState: (() {
+        List<OrderHistoryHeaderState> orderHistoryHeaderState =
+            store.state.orderHistoryHeaderState;
+        if (orderHistoryHeaderState.length > 10)
+          orderHistoryHeaderState =
+              orderHistoryHeaderState.getRange(0, 10).toList();
+        return orderHistoryHeaderState;
+      })(),
+      userState: store.state.user,
       topUpRequest: store.state.topUpRequest,
       onTopUpRequestFormSubmit: (TopUpRequestState topUpRequestState) =>
           {store.dispatch(submitTopUpRequest(topUpRequestState))},
-
-      balanceHistory: store.state.balanceHistory,
     );
   }
 }

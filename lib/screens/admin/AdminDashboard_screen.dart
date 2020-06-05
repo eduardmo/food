@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food/screens/admin/ManageBalanceRequest_screen.dart';
+import 'package:food/screens/admin/MasterOrderManagement_screen.dart';
 import 'package:food/screens/admin/MenuManagement_screen.dart';
 import 'package:food/styles/colors.dart';
 
@@ -20,7 +21,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
   Widget build(BuildContext context) {
     final _tabs = [
       MenuManagement(),
-      Text("Orders"),
+      MasterOrderManagement(),
       ManageBalanceRequest()
     ];
 

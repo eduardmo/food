@@ -11,8 +11,6 @@ import 'package:food/actions/item_action.dart';
 import 'package:food/actions/menu_action.dart';
 import 'package:food/actions/category_action.dart';
 
-import 'mybalance_action.dart';
-
 class UserLoginRequest {}
 
 class UserLoginSuccess {
@@ -68,7 +66,6 @@ ThunkAction<AppState> createLogOutMiddleware = (Store<AppState> store) async {
 };
 
 ThunkAction<AppState> createLogInMiddleware = (Store<AppState> store) async {
-//  await store.dispatch(UserLoginRequest());
   FirebaseUser userFirebase;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -93,32 +90,39 @@ ThunkAction<AppState> createLogInMiddleware = (Store<AppState> store) async {
           name: userFirebase.displayName,
           email: userFirebase.email,
           uid: userFirebase.uid,
+          balance: (() {
+            if (userSnapshot.data["balance"] is int) {
+              int i = userSnapshot.data["balance"];
+              return i.toDouble();
+            } else
+              return userSnapshot.data["balance"];
+          })(),
           isAdmin: userSnapshot.data["isAdmin"])));
     } else {
       //If not, add to our database
       await ref.document(userFirebase.uid).setData({
         'email': userFirebase.email,
         'name': userFirebase.displayName,
+        'balance': 0.0,
         'isAdmin': false
       });
       await store.dispatch(new UserLoginSuccess());
+
       await store.dispatch(new SetUserState(new UserState(
           name: userFirebase.displayName,
           email: userFirebase.email,
           uid: userFirebase.uid,
+          balance: 0.0,
           isAdmin: false)));
     }
-    
+
     //Retrieve data for all items
-    await store.dispatch(retrieveMenu); 
+    await store.dispatch(retrieveMenu);
     await store.dispatch(retrieveCategories);
     await store.dispatch(retrieveItems);
-    await store.dispatch(retrieveBalance(userFirebase.uid));
-    await store.dispatch(retrieveTopUpRequest(userFirebase.uid));
 
     //Open Dashboard
     await store.dispatch(NavigateToAction.replace('/dashboard'));
-
   } catch (error) {
     store.dispatch(new UserLoginFailure(error));
   }

@@ -21,6 +21,11 @@ AdminState _$AdminStateFromJson(Map<String, dynamic> json) {
             ? null
             : TopUpRequestState.fromJson(e as Map<String, dynamic>))
         ?.toList(),
+    masterOrderStates: (json['masterOrderStates'] as List)
+        ?.map((e) => e == null
+            ? null
+            : MasterOrderState.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
   );
 }
 
@@ -29,4 +34,5 @@ Map<String, dynamic> _$AdminStateToJson(AdminState instance) =>
       'users': instance.users,
       'menus': instance.menus,
       'topUpRequestStates': instance.topUpRequestStates,
+      'masterOrderStates': instance.masterOrderStates,
     };

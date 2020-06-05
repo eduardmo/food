@@ -15,6 +15,8 @@ class MyBalance extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new StoreConnector<AppState, _ViewModel>(
+        onInit: (store) =>
+            store.dispatch(retrieveBalanceHistory(store.state.user.uid)),
         converter: _ViewModel.fromStore,
         builder: (BuildContext context, _ViewModel vm) {
           return DefaultTabController(

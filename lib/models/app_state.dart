@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:food/models/admin_state.dart';
 import 'package:food/models/balance_history_state.dart';
-import 'package:food/models/cart_state.dart';
 import 'package:food/models/category_state.dart';
 import 'package:food/models/items_state.dart';
+import 'package:food/models/master_order_state.dart';
+import 'package:food/models/order_history_header_state.dart';
 import 'package:food/models/topup_request_state.dart';
 import 'package:meta/meta.dart';
 
@@ -21,30 +22,36 @@ class AppState {
   final List<ItemState> filteredItems;
   final List<BalanceHistoryState> balanceHistory;
   final List<TopUpRequestState> topUpRequest;
-  final CartState cartItems;
+  final List<OrderHistoryHeaderState> orderHistoryHeaderState;
+  final List<ItemState> cart;
+  final MasterOrderState masterOrderState;
   final AdminState adminState;
 
   AppState({
+    List<ItemState> cart,
     List<MenuState> menus,
     List<CategoryState> categories,
     List<ItemState> items,
     List<ItemState> filteredItems,
     List<BalanceHistoryState> balanceHistory,
     List<TopUpRequestState> topUpRequest,
-    CartState cartItems,
+    List<OrderHistoryHeaderState> orderHistoryHeaderState,
     AuthState auth,
     UserState user,
+    MasterOrderState masterOrderState,
     AdminState adminState
   })  : auth = auth ?? new AuthState(),
         user = user ?? new UserState(),
+        cart = cart ?? new List<ItemState>(),
         menus = menus ?? new List<MenuState>(),
         categories = categories ?? new List<CategoryState>(),
         items = items ?? new List<ItemState>(),
-        cartItems = cartItems ?? new CartState(),
         balanceHistory = balanceHistory ?? new List<BalanceHistoryState>(),
         filteredItems = filteredItems ?? new List<ItemState>(),
         topUpRequest = topUpRequest ?? new List<TopUpRequestState>(),
-        adminState = adminState ?? new AdminState()
+        orderHistoryHeaderState = orderHistoryHeaderState ?? new List<OrderHistoryHeaderState>(),
+        adminState = adminState ?? new AdminState(),
+        masterOrderState = masterOrderState ?? new MasterOrderState(id:null)
         ;
 
   factory AppState.fromJson(Map<String, dynamic> json) => AppState(
@@ -82,9 +89,6 @@ class AppState {
                     ? null
                     : ItemState.fromJson(e as Map<String, dynamic>))
                 .toList(),
-        cartItems: json['cartItems'] == null
-            ? null
-            : CartState.fromJson(json['cartState'] as Map<String, dynamic>),
         balanceHistory: json['balanceHistory'] == null
             ? null
             : (json['balanceHistory'] as List)
@@ -98,6 +102,13 @@ class AppState {
                 .map((e) => e == null
                     ? null
                     : TopUpRequestState.fromJson(e as Map<String, dynamic>))
+                .toList(),
+        orderHistoryHeaderState: json['orderHistoryHeaderState'] == null
+            ? null
+            : (json['orderHistoryHeaderState'] as List)
+                .map((e) => e == null
+                    ? null
+                    : OrderHistoryHeaderState.fromJson(e as Map<String, dynamic>))
                 .toList(),
       );
 
@@ -148,9 +159,13 @@ class AppState {
                   ? null
                   : new ItemState.fromJson(e as Map<String, dynamic>))
               .toList(),
-      cartItems: json['cartItems'] == null
+      orderHistoryHeaderState:json['orderHistoryHeaderState'] == null
           ? null
-          : new CartState.fromJson(json['cartItems']),
+          : (json['orderHistoryHeaderState'] as List)
+              .map((e) => e == null
+                  ? null
+                  : new OrderHistoryHeaderState.fromJson(e as Map<String, dynamic>))
+              .toList(),
     );
   }
 
@@ -161,9 +176,9 @@ class AppState {
         'categories': categories,
         'items': items,
         'filteredItems': filteredItems,
-        'cartItems': cartItems,
         'topUpRequest': topUpRequest,
-        'balanceHistory': balanceHistory
+        'balanceHistory': balanceHistory,
+        'orderHistoryHeaderState':orderHistoryHeaderState
       };
 
   AppState copyWith(
@@ -173,9 +188,11 @@ class AppState {
       List<CategoryState> categories,
       List<ItemState> items,
       List<ItemState> filteredItems,
-      CartState cartItems,
+      List<ItemState> cart,
       List<BalanceHistoryState> balanceHistory,
       List<TopUpRequestState> topUpRequest,
+      List<OrderHistoryHeaderState> orderHistoryHeaderState,
+      MasterOrderState masterOrderState,
       AdminState adminState}) {
     return new AppState(
       auth: auth ?? this.auth,
@@ -184,10 +201,12 @@ class AppState {
       categories: categories ?? this.categories,
       items: items ?? this.items,
       filteredItems: filteredItems ?? this.filteredItems,
-      cartItems: cartItems ?? this.cartItems,
+      cart: cart ?? this.cart,
       balanceHistory: balanceHistory ?? this.balanceHistory,
       topUpRequest: topUpRequest ?? this.topUpRequest,
-      adminState: adminState ?? this.adminState
+      adminState: adminState ?? this.adminState,
+      masterOrderState: masterOrderState?? this.masterOrderState,
+      orderHistoryHeaderState:orderHistoryHeaderState??orderHistoryHeaderState
     );
   }
 
@@ -200,7 +219,7 @@ class AppState {
       categories: $categories,
       items: $items,
       filteredItems: $filteredItems,
-      cartItems: $cartItems,
+      cart: $cart,
       balanceHistory: $balanceHistory,
       topUpRequest: $topUpRequest,
     }''';

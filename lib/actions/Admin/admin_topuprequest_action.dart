@@ -19,8 +19,6 @@ ThunkAction<AppState> retrieveAdminTopUpRequest() {
   return (Store<AppState> store) async {
     try {
 
-
-      print("Masuk sini");
       //Get user balance
       List<TopUpRequestState> topUpRequest = await Firestore.instance
           .collection("TopUpRequest")

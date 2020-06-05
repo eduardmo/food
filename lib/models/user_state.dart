@@ -6,9 +6,10 @@ class UserState {
   final String name;
   final String email;
   final String uid;
+  final double balance;
   final bool isAdmin;
 
-  UserState({this.name, this.email, this.uid, this.isAdmin});
+  UserState({this.name, this.email, this.balance,this.uid, this.isAdmin});
 
   Map<String, dynamic> toJson() => _$UserStateToJson(this);
 
@@ -19,12 +20,14 @@ class UserState {
       {final String name,
       final String email,
       final String uid,
+      final double balance,
       final bool isAdmin,
      }) {
     return new UserState(
         name: name ?? this.name,
         email: email ?? this.email,
         uid: uid ?? this.uid,
+        balance:balance?? this.balance,
         isAdmin: isAdmin ?? this.isAdmin
        );
   }

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:food/actions/user_action.dart';
 import 'package:food/models/app_state.dart';
 import 'package:food/models/balance_history_state.dart';
 import 'package:food/models/topup_request_state.dart';
@@ -29,9 +30,7 @@ class RequestTopUpRequest {
   }
 }
 
-class SubmitTopUpRequest {}
-
-ThunkAction<AppState> retrieveBalance(String userid) {
+ThunkAction<AppState> retrieveBalanceHistory(String userid) {
   return (Store<AppState> store) async {
     try {
       //Get user balance
@@ -137,6 +136,37 @@ ThunkAction<AppState> submitTopUpRequest(TopUpRequestState topUpRequestState) {
 
       //re-retrieve top up request
       store.dispatch(retrieveTopUpRequest(topUpRequestState.userid));
+    } catch (error) {
+      print(error);
+    }
+  };
+}
+
+ThunkAction<AppState> decreaseBalance(double amount) {
+  return (Store<AppState> store) async {
+    try {
+      //Retrieve user reference
+      DocumentSnapshot user = await Firestore.instance
+          .collection("user")
+          .document(store.state.user.uid)
+          .get();
+
+        //Save new balance
+        await Firestore.instance
+            .collection("user")
+            .document(store.state.user.uid)
+            .updateData({"balance": store.state.user.balance - amount});
+
+        //Add to Balance History
+        await Firestore.instance.collection("BalanceHistory").add({
+          "Balance": amount,
+          "DateTime": DateTime.now(),
+          "Type": "MINUS",
+          "userid": user.reference
+        });
+
+      //re-retrieve balance & balance history from database
+      store.dispatch(SetUserState(store.state.user.copyWith(balance:store.state.user.balance - amount)));
     } catch (error) {
       print(error);
     }
